@@ -126,30 +126,6 @@ const ORACLE = {
     "The oracle is offended. {loss} gold for your insolence.",
     "How dare you. {loss} gold, for the insult.",
   ],
-  // The oracle's comment on a new character. One line is picked from the
-  // character's class and race lines together.
-  reactClass: {
-    Druid:   ["A Druid. The trees were expecting you.", "A Druid? Try not to turn into anything I would have to clean up."],
-    Hunter:  ["A Hunter. Please keep the pet away from my offerings.", "A Hunter. Bold of you to bring a bow into a place with a ceiling."],
-    Mage:    ["A Mage. I hope you brought your own fire extinguisher.", "Another Mage. The library budget weeps."],
-    Paladin: ["A Paladin. Do try to smite quietly.", "A Paladin. So much light, so little humility."],
-    Priest:  ["A Priest. I will pray for your sake. Someone should.", "A Priest. Fate and faith, how neat."],
-    Rogue:   ["A Rogue. I am counting my gold. Twice.", "A Rogue. Do not touch anything on the way out."],
-    Shaman:  ["A Shaman. The storms send their regards.", "A Shaman. At least your totems will listen to you."],
-    Warlock: ["A Warlock. I will not ask what you traded for this.", "A Warlock. The imp can wait outside."],
-    Warrior: ["A Warrior. Subtle as ever.", "A Warrior. Please swing at something else."],
-  },
-  reactRace: {
-    "Human":     ["A Human. Reliably unremarkable. Surprise me.", "A Human. The classic choice."],
-    "Dwarf":     ["A Dwarf. I trust you brought your own ale.", "A Dwarf. Stout of heart, short of patience."],
-    "Gnome":     ["A Gnome. Small, clever and probably on fire.", "A Gnome. Bold. Short, but bold."],
-    "Night Elf": ["A Night Elf. You have seen a lot. Please do not mention it.", "A Night Elf. The moon is not impressed either."],
-    "Skyborne":  ["A Skyborne. You came a long way for this.", "A Skyborne. Mind the ceiling, and the oracle."],
-    "Orc":       ["An Orc. Let us keep the shouting to a minimum.", "An Orc. A fine choice, if you enjoy being right."],
-    "Undead":    ["An Undead. You look better than most of my customers.", "An Undead. Terribly fashionable."],
-    "Tauren":    ["A Tauren. Mind the doorframe.", "A Tauren. Gentle giant. Mostly."],
-    "Troll":     ["A Troll. Regenerating already, I see.", "A Troll. Ya, mon. Do not repeat that."],
-  },
   nothingToTake: [
     "The oracle would fine you for that, but your purse is already empty.",
   ],

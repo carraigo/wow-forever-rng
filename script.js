@@ -5,6 +5,11 @@ const WEIGHT_COMBO = "Per combination";
 const RESULT_FIELDS = ["gender", "faction", "race", "class", "spec"];
 const ANIMATE_ALL = [...RESULT_FIELDS, "backstory"];
 const HISTORY_MAX = 3;
+const ANIMATE_ALL = [...RESULT_FIELDS, "backstory"];
+const ORACLE_START = 50;
+const PRICE = { roll: 10, class: 5, backstory: 3 };
+const ARGUE_COST = 2;      // the oracle bills for her time
+const OFFENDED_FINE = 5;
 
 // Oracle mode: prices and odds (gold).
 const ORACLE_START = 50;
@@ -29,7 +34,7 @@ const fill = (text, vars) => text.replace(/\{(\w+)\}/g, (_, k) => vars[k]);
 let current = null;          // the character on screen
 let rollHistory = [];
 let nextId = 1;
-const oracle = { on: false, purse: ORACLE_START, free: 0, firstRollFree: false };
+let oracleOn = false, purse = ORACLE_START, freeRerolls = 0;
 
 // ---- Filters ----
 function fillSelect(el, values, keepValue, withAny = true) {
@@ -179,6 +184,76 @@ function commit(line, animateFields) {
   announce(line, reaction(current));
 }
 
+// "A <race> <class> <past>, <goal>." from the lists in data.js.
+function makeBackstory(c) {
+  const past = pick([...BACKSTORY.pasts, ...BACKSTORY.classPasts[c.class]]);
+  const goal = pick([...BACKSTORY.goals, ...BACKSTORY.factionGoals[c.race.faction]]);
+  const article = /^[AEIOU]/i.test(c.race.name) ? "An" : "A";
+  return `${article} ${c.race.name} ${c.class} ${past}, ${goal}.`;
+}
+
+// ---- The oracle: optional mode where rerolls cost gold ----
+function priceOf(kind) {
+  if (kind === "roll" && !current) return 0;      // the first roll is free
+  return freeRerolls > 0 ? 0 : PRICE[kind];
+}
+const canAfford = kind => purse >= priceOf(kind);
+const oracleSay = text => { $("oracleSay").textContent = text; };
+
+// Pay for an action. Returns false if the player can't afford it.
+function spend(kind) {
+  if (!oracleOn) return true;
+  if (kind === "roll" && !current) {
+    oracleSay(pick(ORACLE.first));
+  } else if (freeRerolls > 0) {
+    freeRerolls--;
+    oracleSay(pick(ORACLE.free));
+  } else if (purse >= PRICE[kind]) {
+    purse -= PRICE[kind];
+    const broke = purse < Math.min(...Object.values(PRICE));
+    oracleSay(pick(broke ? ORACLE.broke : ORACLE.paid).replace("{cost}", PRICE[kind]));
+  } else {
+    oracleSay(pick(ORACLE.broke));
+    renderOracle();
+    return false;
+  }
+  renderOracle();
+  return true;
+}
+
+function argue() {
+  if (purse < ARGUE_COST) return;
+  purse -= ARGUE_COST;
+  const r = Math.random();
+  if (r < 0.30) {
+    freeRerolls++;
+    oracleSay(pick(ORACLE.relent));
+  } else if (r < 0.65) {
+    oracleSay(pick(ORACLE.refuse));
+  } else {
+    const loss = Math.min(OFFENDED_FINE, purse);
+    purse -= loss;
+    oracleSay(loss ? pick(ORACLE.offended).replace("{loss}", loss) : pick(ORACLE.nothingToTake));
+  }
+  renderOracle();
+}
+
+// Refresh the purse, the price tags on the buttons and which buttons are enabled.
+function renderOracle() {
+  $("oracle").hidden = !oracleOn;
+  $("purse").textContent = `Purse: ${purse} gold`;
+  $("freeCount").textContent = freeRerolls ? `Free rerolls: ${freeRerolls}` : "";
+  const tag = kind => !oracleOn ? "" : priceOf(kind) === 0 ? "(free)" : `(${priceOf(kind)}g)`;
+  $("costRoll").textContent = tag("roll");
+  $("costClass").textContent = tag("class");
+  $("costBackstory").textContent = tag("backstory");
+  $("roll").disabled = oracleOn && !!current && !canAfford("roll");
+  $("rerollClass").disabled = !current || (oracleOn && !canAfford("class"));
+  $("rerollBackstory").disabled = oracleOn && !canAfford("backstory");
+  $("argue").disabled = purse < ARGUE_COST;
+  $("costArgue").textContent = `(${ARGUE_COST}g)`;
+}
+
 function rollAll() {
   const f = filters();
   const pairs = validPairs(f);
@@ -193,12 +268,11 @@ function rollAll() {
     const race = pick(unique(pairs.map(p => p.race)));
     choice = pick(pairs.filter(p => p.race === race));
   }
-
-  const line = charge("roll");
-  if (line === null) return;
-  current = { gender: f.gender === "Any" ? pick(GENDERS) : f.gender, race: choice.race };
-  setClass(current, choice.cls);
-  commit(line, ANIMATE_ALL);
+  if (!spend("roll")) return;
+  current = { id: nextId++, gender: pick(genderPool()), race, class: cls, ...rollSpec(cls) };
+  current.backstory = makeBackstory(current);
+  record(current);
+  show(current, ANIMATE_ALL);
 }
 
 function rerollClass() {
@@ -208,22 +282,22 @@ function rerollClass() {
     // The filters allow only the current class, so there is nothing to switch to.
     return setNote("No other class matches your filters.");
   }
-  const line = charge("class");
-  if (line === null) return;
-  setClass(current, pick(options).cls);
-  commit(line, ["class", "spec", "backstory"]);
+  if (!spend("class")) return;
+  current.id = nextId++;
+  current.class = pick(options);
+  Object.assign(current, rollSpec(current.class));
+  current.backstory = makeBackstory(current);
+  record(current);
+  show(current, ["class", "spec", "backstory"]);
 }
 
 // Keep the same character and write a new backstory for it.
 function rerollBackstory() {
-  if (!current) return;
-  const line = charge("backstory");
-  if (line === null) return;
+  if (!current || !spend("backstory")) return;
   current.backstory = makeBackstory(current);
   const entry = rollHistory.find(h => h.id === current.id);
   if (entry) entry.backstory = current.backstory;
-  renderCharacter(current, ["backstory"]);
-  announce(line);
+  show(current, ["backstory"]);
 }
 
 // ---- Display ----
@@ -254,13 +328,13 @@ function renderCharacter(c, animateFields = []) {
   renderOracle();
   if (!c) { delete document.documentElement.dataset.faction; return; }
   document.documentElement.dataset.faction = c.race.faction;
-  $("gender").textContent    = c.gender;
-  $("faction").textContent   = c.race.faction;
-  $("faction").style.color   = factionColor(c.race.faction);
-  $("race").textContent      = c.race.name;
-  $("class").textContent     = c.class;
-  $("class").style.color     = classColor(c.class);
-  $("spec").textContent      = c.spec;
+  $("gender").textContent  = c.gender;
+  $("faction").textContent = c.race.faction;
+  $("faction").style.color = `var(--${c.race.faction.toLowerCase()})`;
+  $("race").textContent    = c.race.name;
+  $("class").textContent   = c.class;
+  $("class").style.color   = `var(--c-${c.class.toLowerCase()})`;
+  $("spec").textContent    = c.spec;
   $("backstory").textContent = c.backstory;
   animate(animateFields);
 }
@@ -295,6 +369,7 @@ function renderHistory() {
       if (color) s.style.color = color;
       b.appendChild(s);
     }
+    b.addEventListener("click", () => { current = { ...c }; show(current, ANIMATE_ALL); });
     li.appendChild(b);
     list.appendChild(li);
   });
@@ -319,19 +394,11 @@ $("roll").addEventListener("click", rollAll);
 $("rerollClass").addEventListener("click", rerollClass);
 $("rerollBackstory").addEventListener("click", rerollBackstory);
 $("argue").addEventListener("click", argue);
-$("clearHistory").addEventListener("click", () => { rollHistory = []; renderHistory(); });
-$("historyList").addEventListener("click", e => {
-  const btn = e.target.closest("button[data-i]");
-  if (!btn) return;
-  current = { ...rollHistory[Number(btn.dataset.i)] };
-  renderCharacter(current, ANIMATE_ALL);
-});
 $("oracleMode").addEventListener("change", e => {
-  oracle.on = e.target.checked;
-  oracle.purse = ORACLE_START;
-  oracle.free = 0;
-  oracle.firstRollFree = oracle.on;
-  oracleSay(oracle.on ? fill(pick(ORACLE.welcome), { gold: ORACLE_START }) : "");
+  oracleOn = e.target.checked;
+  purse = ORACLE_START;
+  freeRerolls = 0;
+  oracleSay(oracleOn ? pick(ORACLE.welcome).replace("{gold}", ORACLE_START) : "");
   setNote();
   renderOracle();
 });
