@@ -45,7 +45,7 @@ dt { color: var(--muted); font-size: .8rem; letter-spacing: .15em; text-transfor
 dd { margin: 0; }
 
 /* Roll animation: a short fade and rise, staggered top to bottom. */
-dd.roll {
+.roll {
   animation: roll .4s ease-out both;
   animation-delay: calc(var(--i, 0) * 70ms);
 }
@@ -54,7 +54,7 @@ dd.roll {
   to   { opacity: 1; transform: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  dd.roll { animation: none; }
+  .roll { animation: none; }
 }
 
 .msg { color: var(--muted); font-size: 1rem; margin: 0 0 40px; }
@@ -118,3 +118,19 @@ button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
 
 /* Status line under the roll buttons (e.g. "No other class matches your filters."). */
 .note { color: var(--muted); font-size: .8rem; margin: -24px 0 32px; }
+
+/* Backstory hook under the result. */
+.backstory-wrap { margin: -16px 0 40px; max-width: 40ch; }
+.backstory { margin: 0 0 8px; font-size: 1rem; line-height: 1.5; font-style: italic; }
+
+/* Price tags on buttons (oracle mode). */
+.cost { text-transform: none; letter-spacing: 0; opacity: .7; margin-left: 4px; }
+.cost:empty { display: none; }
+
+/* The oracle panel under the roll buttons. */
+.oracle { max-width: 40ch; margin: -8px 0 40px; }
+.oracle .purse { margin: 0 0 8px; font-size: .8rem; color: var(--muted); display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.oracle .say { margin: 0; min-height: 4.5em; font-size: .9rem; line-height: 1.5; font-style: italic; }
+.oracle .small { margin-top: 12px; }
+.check { display: flex; align-items: center; gap: 8px; font-size: .9rem; cursor: pointer; }
+.check input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
