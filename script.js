@@ -5,6 +5,7 @@ const WEIGHT_COMBO = "Per combination";
 const RESULT_FIELDS = ["gender", "faction", "race", "class", "spec"];
 const ANIMATE_ALL = [...RESULT_FIELDS, "backstory"];
 const HISTORY_MAX = 3;
+const PAYWALLED_RACE = "Skyborne";   // can be excluded with a checkbox
 
 // Oracle mode: prices and odds (gold).
 const ORACLE_START = 50;
@@ -45,12 +46,16 @@ function fillSelect(el, values, keepValue, withAny = true) {
 const filters = () => ({
   gender: $("fGender").value, faction: $("fFaction").value,
   race: $("fRace").value, class: $("fClass").value,
+  noPaywalled: $("excludePaywalled").checked,
 });
+
+// Is this race allowed under the filters (ignoring faction, race and class choices)?
+const raceAllowed = (r, f) => !(f.noPaywalled && r.name === PAYWALLED_RACE);
 
 // Race options depend on faction; class options depend on faction and race.
 function refreshOptions() {
   const f = filters();
-  const racePool = RACES.filter(r => matches(f.faction, r.faction));
+  const racePool = RACES.filter(r => matches(f.faction, r.faction) && raceAllowed(r, f));
   fillSelect($("fRace"), unique(racePool.map(r => r.name)), f.race);
   const race = $("fRace").value;   // may have been reset by the line above
   const classPool = racePool.filter(r => matches(race, r.name));
@@ -74,7 +79,7 @@ function updateHint() {
 // Every valid { race, cls } pair under the filters. Empty means no valid combination.
 function validPairs(f = filters()) {
   return RACES
-    .filter(r => matches(f.faction, r.faction) && matches(f.race, r.name))
+    .filter(r => raceAllowed(r, f) && matches(f.faction, r.faction) && matches(f.race, r.name))
     .flatMap(race => race.classes.filter(c => matches(f.class, c)).map(cls => ({ race, cls })));
 }
 
@@ -310,6 +315,7 @@ for (const id of ["fGender", "fFaction", "fRace", "fClass", "fWeight"]) {
   $(id).addEventListener("change", () => setNote());
 }
 $("fFaction").addEventListener("change", refreshOptions);
+$("excludePaywalled").addEventListener("change", () => { refreshOptions(); setNote(); });
 $("fRace").addEventListener("change", refreshOptions);
 $("clear").addEventListener("click", () => {
   for (const id of ["fGender", "fFaction", "fRace", "fClass"]) $(id).value = "Any";

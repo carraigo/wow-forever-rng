@@ -5,6 +5,7 @@ A small static page that rolls a random World of Warcraft character: gender, fac
 ## Features
 
 - **Filters:** gender, faction, race and class. Options update to match each other.
+- **Exclude Skyborne:** a checkbox under the filters removes Skyborne from the Race dropdown and from every roll, for players who would rather leave out the paid race. Unticking brings it back. "Clear filters" leaves the checkbox as it is.
 - **Spec:** each roll includes a random spec for the rolled class.
 - **Odds:** "Per race" gives every race the same chance. "Per combination" gives every valid race and class pair the same chance.
 - **Backstory:** each roll comes with a one-line backstory hook. "Reroll backstory" writes a new one for the same character, and "Reroll class" writes a new one to match the new class.

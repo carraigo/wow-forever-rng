@@ -134,3 +134,5 @@ button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
 .oracle .small { margin-top: 12px; }
 .check { display: flex; align-items: center; gap: 8px; font-size: .9rem; cursor: pointer; }
 .check input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
+
+.filter-col .filters + .hint + .check { margin-top: 16px; }
