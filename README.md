@@ -7,7 +7,7 @@ A small static page that rolls a random World of Warcraft character: gender, fac
 - **Filters:** gender, faction, race and class. Options update to match each other.
 - **Spec:** each roll includes a random spec for the rolled class.
 - **Odds:** "Per race" gives every race the same chance. "Per combination" gives every valid race and class pair the same chance.
-- **History:** the last 10 rolls are listed under the result. Click one to restore it. History is kept for the current visit only and clears on refresh.
+- **History:** the last 3 rolls are listed under the result. Click one to restore it. History is kept for the current visit only and clears on refresh.
 
 ## Running it
 
@@ -33,12 +33,7 @@ All game data is in `data.js`. Edit the `RACES` array; nothing else needs to cha
 
 ## Data source
 
-The race/class table reflects the Forever ruleset as entered by the project owner.
-
-- Source: _add link here_
-- Last verified: _add date here_
-
-Update the last-verified date whenever you check the table against the game, since this is the part most likely to go stale after a patch.
+Race and class combinations: https://www.warcrafttavern.com/forever/guides/race-class-combos/
 
 ## Notes
 

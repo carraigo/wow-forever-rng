@@ -4,7 +4,7 @@ const ALL_CLASSES = [...new Set(RACES.flatMap(r => r.classes))].sort();
 const RESULT_FIELDS = ["gender", "faction", "race", "class", "spec"];
 const WEIGHT_RACE = "Per race";
 const WEIGHT_COMBO = "Per combination";
-const HISTORY_MAX = 10;
+const HISTORY_MAX = 3;
 
 const $ = id => document.getElementById(id);
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
