@@ -130,7 +130,7 @@ button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
 /* The oracle panel under the roll buttons. */
 .oracle { max-width: 40ch; margin: -8px 0 40px; }
 .oracle .purse { margin: 0 0 8px; font-size: .8rem; color: var(--muted); display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-.oracle .say { margin: 0; min-height: 3em; font-size: .9rem; line-height: 1.5; font-style: italic; }
+.oracle .say { margin: 0; min-height: 4.5em; font-size: .9rem; line-height: 1.5; font-style: italic; }
 .oracle .small { margin-top: 12px; }
 .check { display: flex; align-items: center; gap: 8px; font-size: .9rem; cursor: pointer; }
 .check input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
