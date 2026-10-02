@@ -23,15 +23,6 @@ All game data is in `data.js`. Edit the `RACES` array; nothing else needs to cha
 - A race playable by both factions (currently Skyborne) is listed once per faction. When the Faction filter is "Any", that race rolls its faction at random.
 - A new class needs a color variable in `style.css`, named `--c-<classname>` in lowercase (for example `--c-monk`), in both the light and dark blocks.
 
-## Data source
-
-The race/class table reflects the Forever ruleset as entered by the project owner.
-
-- Source: _add link here_
-- Last verified: _add date here_
-
-Update the last-verified date whenever you check the table against the game, since this is the part most likely to go stale after a patch.
-
 ## Notes
 
 - Rolls pick a race first, then a class, so races with fewer classes make each of their classes slightly more likely than races with many.
