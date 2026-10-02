@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>WoW Forever RNG</title>
-<meta name="description" content="Roll a random World of Warcraft Forever character: gender, faction, race and class, with filters.">
+<meta name="description" content="Roll a random World of Warcraft Forever character: gender, faction, race, class and spec, with filters.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎲</text></svg>">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -16,6 +16,8 @@
     <dt>Faction</dt><dd id="faction">–</dd>
     <dt>Race</dt><dd id="race">–</dd>
     <dt>Class</dt><dd id="class">–</dd>
+    <dt>Spec</dt><dd id="spec">–</dd>
+    <dt>Role</dt><dd id="role">–</dd>
   </dl>
   <p class="msg" id="msg" role="status" hidden>No valid combination with these filters.</p>
 
@@ -23,6 +25,14 @@
     <button id="roll">Roll all</button>
     <button id="rerollClass">Reroll class</button>
   </div>
+
+  <section class="history" id="historyWrap" hidden>
+    <div class="history-head">
+      <div class="filters-title">History</div>
+      <button class="link" id="clearHistory" type="button">Clear history</button>
+    </div>
+    <ol id="historyList"></ol>
+  </section>
 
   <div class="filters-title">Filters</div>
   <div class="filters">
@@ -34,9 +44,18 @@
     <select id="fRace"></select>
     <label for="fClass">Class</label>
     <select id="fClass"></select>
+    <label for="fRole">Role</label>
+    <select id="fRole"></select>
   </div>
   <p class="hint" id="hint" role="status" hidden></p>
   <button id="clear" style="margin-top:24px;padding:8px 20px;font-size:.75rem">Clear filters</button>
+
+  <div class="filters-title options-title">Odds</div>
+  <div class="filters">
+    <label for="fWeight">Weighting</label>
+    <select id="fWeight"></select>
+  </div>
+  <p class="hint">Per race gives every race the same chance. Per combination gives every valid race and class pair the same chance.</p>
 
 <script src="data.js"></script>
 <script src="script.js"></script>
