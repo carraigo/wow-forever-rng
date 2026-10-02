@@ -20,13 +20,23 @@
     <dt>Class</dt><dd id="class">–</dd>
     <dt>Spec</dt><dd id="spec">–</dd>
   </dl>
+  <div class="backstory-wrap" id="backstoryWrap" hidden>
+    <p class="backstory" id="backstory" aria-live="polite"></p>
+    <button class="link" id="rerollBackstory" type="button">Reroll backstory <span class="cost" id="costBackstory"></span></button>
+  </div>
   <p class="msg" id="msg" role="status" hidden>No valid combination with these filters.</p>
 
   <div class="actions">
-    <button id="roll">Roll all</button>
-    <button id="rerollClass">Reroll class</button>
+    <button id="roll">Roll all <span class="cost" id="costRoll"></span></button>
+    <button id="rerollClass">Reroll class <span class="cost" id="costClass"></span></button>
   </div>
   <p class="note" id="note" role="status" hidden></p>
+
+  <section class="oracle" id="oracle" aria-label="The oracle" hidden>
+    <p class="purse"><span id="purse"></span><span id="freeCount"></span></p>
+    <p class="say" id="oracleSay" role="status"></p>
+    <button id="argue" class="small" type="button">Argue with the oracle <span class="cost" id="costArgue"></span></button>
+  </section>
 
   <section class="history" id="historyWrap" hidden>
     <div class="history-head">
@@ -59,6 +69,10 @@
     <select id="fWeight"></select>
   </div>
   <p class="hint">Per race gives every race the same chance. Per combination gives every valid race and class pair the same chance.</p>
+
+  <div class="filters-title options-title">Oracle</div>
+  <label class="check"><input type="checkbox" id="oracleMode"> Consult the Oracle, Joelinton</label>
+  <p class="hint">Rerolls cost gold and your first roll is free. Arguing with Joelinton costs 2 gold and might win you a free reroll, or get you fined.</p>
   </aside>
   </main>
 
