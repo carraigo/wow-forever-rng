@@ -108,7 +108,6 @@ button.link:hover, button.link:focus-visible { color: var(--fg); }
 }
 .filter-col .hint { max-width: 32ch; margin-top: 12px; }
 button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
-.options-title { margin-top: 40px; }
 @media (max-width: 760px) {
   .layout { grid-template-columns: minmax(0, 1fr); gap: 48px 0; }
   .roll-col { align-items: center; }
