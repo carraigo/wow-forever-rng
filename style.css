@@ -91,3 +91,27 @@ button.link:hover, button.link:focus-visible { color: var(--fg); }
 }
 #historyList button:hover, #historyList button:focus-visible { border-color: var(--accent-line); }
 .options-title { margin-top: 40px; }
+
+/* Two-column layout: roll on the left, filters on the right.
+   Stacks into one column on narrow screens. */
+.layout {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 64px; align-items: start; width: 100%; max-width: 900px;
+}
+.roll-col { display: flex; flex-direction: column; align-items: center; min-width: 0; }
+.roll-col dl { margin-bottom: 40px; }
+.roll-col .actions { margin-bottom: 40px; }
+.roll-col .history { margin: 0; }
+.filter-col {
+  text-align: left; padding-left: 64px; border-left: 1px solid var(--line);
+  display: flex; flex-direction: column; align-items: flex-start;
+}
+.filter-col .hint { max-width: 32ch; margin-top: 12px; }
+button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
+.options-title { margin-top: 40px; }
+@media (max-width: 760px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 48px 0; }
+  .roll-col { align-items: center; }
+  .filter-col { padding-left: 0; border-left: none; border-top: 1px solid var(--line); padding-top: 32px; align-items: center; text-align: center; }
+  .filter-col .filters { text-align: left; }
+}
