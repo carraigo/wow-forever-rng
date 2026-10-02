@@ -1,0 +1,52 @@
+:root {
+  --bg:#fafafa; --fg:#1a1a1a; --muted:#888; --line:#ddd;
+  --accent:var(--fg); --accent-line:var(--line);
+  --alliance:#1e5fbf; --horde:#b3261e;
+  --c-druid:#d96500; --c-hunter:#6e9a2f; --c-mage:#1e9dc4;
+  --c-paladin:#d4608f; --c-priest:#6b6b6b; --c-rogue:#a38c00;
+  --c-shaman:#0058b0; --c-warlock:#5e5fd0; --c-warrior:#9a7442;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:#111; --fg:#eee; --muted:#777; --line:#333;
+    --alliance:#5b9bf0; --horde:#e5534b;
+    --c-druid:#ff7c0a; --c-hunter:#aad372; --c-mage:#3fc7eb;
+    --c-paladin:#f48cba; --c-priest:#ffffff; --c-rogue:#fff468;
+    --c-shaman:#0070dd; --c-warlock:#8788ee; --c-warrior:#c69b6d;
+  }
+}
+:root[data-faction="Alliance"] { --accent:var(--alliance); --accent-line:var(--alliance); }
+:root[data-faction="Horde"]    { --accent:var(--horde);    --accent-line:var(--horde); }
+* { box-sizing: border-box; }
+html, body { min-height: 100%; margin: 0; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 32px 24px; min-height: 100vh;
+}
+h1 {
+  font-size: .8rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 40px;
+  padding-bottom: 14px; border-bottom: 1px solid var(--accent-line);
+  transition: border-color .3s;
+}
+dl {
+  margin: 0 0 40px; display: grid; grid-template-columns: auto auto;
+  gap: 12px 32px; text-align: left; font-size: 1.4rem;
+}
+dt { color: var(--muted); font-size: .8rem; letter-spacing: .15em; text-transform: uppercase; align-self: center; }
+dd { margin: 0; }
+.msg { color: var(--muted); font-size: 1rem; margin: 0 0 40px; }
+.actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-bottom: 56px; }
+button, select {
+  font: inherit; font-size: .85rem; letter-spacing: .12em; text-transform: uppercase;
+  background: none; color: var(--fg); border: 1px solid var(--line);
+  padding: 12px 24px; cursor: pointer; transition: border-color .3s; border-radius: 0;
+}
+button:hover, button:focus-visible, select:hover, select:focus-visible { border-color: var(--accent); outline: none; }
+select { padding: 8px 12px; letter-spacing: .05em; text-transform: none; font-size: .9rem; }
+option { background: var(--bg); color: var(--fg); }
+.filters { display: grid; grid-template-columns: auto auto; gap: 10px 16px; align-items: center; text-align: left; }
+.filters label { color: var(--muted); font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; }
+.filters-title { color: var(--muted); font-size: .75rem; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 16px; }

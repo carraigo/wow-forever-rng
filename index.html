@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Random Character Generator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Random Character</h1>
+
+  <dl id="result">
+    <dt>Gender</dt><dd id="gender">–</dd>
+    <dt>Faction</dt><dd id="faction">–</dd>
+    <dt>Race</dt><dd id="race">–</dd>
+    <dt>Class</dt><dd id="class">–</dd>
+  </dl>
+  <p class="msg" id="msg" hidden>No valid combination with these filters.</p>
+
+  <div class="actions">
+    <button id="roll">Roll all</button>
+    <button id="rerollClass">Reroll class</button>
+  </div>
+
+  <div class="filters-title">Filters</div>
+  <div class="filters">
+    <label for="fGender">Gender</label>
+    <select id="fGender"></select>
+    <label for="fFaction">Faction</label>
+    <select id="fFaction"></select>
+    <label for="fRace">Race</label>
+    <select id="fRace"></select>
+    <label for="fClass">Class</label>
+    <select id="fClass"></select>
+  </div>
+  <button id="clear" style="margin-top:24px;padding:8px 20px;font-size:.75rem">Clear filters</button>
+
+<script src="script.js"></script>
+</body>
+</html>
