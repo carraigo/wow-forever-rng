@@ -4,18 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>WoW Forever RNG</title>
+<meta name="description" content="Roll a random World of Warcraft Forever character: gender, faction, race and class, with filters.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎲</text></svg>">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1>Forever Random Character</h1>
 
-  <dl id="result">
+  <dl id="result" aria-live="polite" aria-atomic="true">
     <dt>Gender</dt><dd id="gender">–</dd>
     <dt>Faction</dt><dd id="faction">–</dd>
     <dt>Race</dt><dd id="race">–</dd>
     <dt>Class</dt><dd id="class">–</dd>
   </dl>
-  <p class="msg" id="msg" hidden>No valid combination with these filters.</p>
+  <p class="msg" id="msg" role="status" hidden>No valid combination with these filters.</p>
 
   <div class="actions">
     <button id="roll">Roll all</button>

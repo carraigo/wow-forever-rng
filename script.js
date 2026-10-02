@@ -67,7 +67,7 @@ function genderPool() {
 
 function rollAll() {
   const races = matchingRaces();
-  if (!races.length) return show(null);
+  if (!races.length) { current = null; return show(null); }
   const race = pick(races);
   current = { gender: pick(genderPool()), race, class: pick(classPoolFor(race)) };
   show(current, RESULT_FIELDS);
@@ -95,6 +95,7 @@ function animate(fields) {
 function show(c, animateFields = []) {
   $("result").hidden = !c;
   $("msg").hidden = !!c;
+  $("rerollClass").disabled = !c;
   if (!c) { delete document.documentElement.dataset.faction; return; }
   document.documentElement.dataset.faction = c.race.faction;
   $("gender").textContent  = c.gender;
@@ -119,4 +120,6 @@ $("clear").addEventListener("click", () => {
 $("roll").addEventListener("click", rollAll);
 $("rerollClass").addEventListener("click", rerollClass);
 
-// No automatic roll on load: the fields show "–" until the user rolls.
+// No automatic roll on load: the fields show "–" until the user rolls,
+// and there is nothing to reroll yet.
+$("rerollClass").disabled = true;
