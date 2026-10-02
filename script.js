@@ -119,4 +119,4 @@ $("clear").addEventListener("click", () => {
 $("roll").addEventListener("click", rollAll);
 $("rerollClass").addEventListener("click", rerollClass);
 
-rollAll();
+// No automatic roll on load: the fields show "–" until the user rolls.
