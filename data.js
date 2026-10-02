@@ -10,41 +10,20 @@
 
 const GENDERS = ["Male", "Female"];
 const FACTIONS = ["Alliance", "Horde"];
-const ROLES = ["Tank", "Healer", "DPS"];
 
-// Specs per class. Each spec lists every role it can fill: a spec that can
-// do more than one (e.g. Feral) lists them all, and one is picked at random
-// when the Role filter is "Any".
+// Specs per class. One is picked at random when a class is rolled.
 // NOTE: this table uses the classic three-tree layout. Check it against
 // your ruleset and edit as needed.
 const SPECS = {
-  Druid:   [ { name: "Balance",       roles: ["DPS"] },
-             { name: "Feral",         roles: ["Tank", "DPS"] },
-             { name: "Restoration",   roles: ["Healer"] } ],
-  Hunter:  [ { name: "Beast Mastery", roles: ["DPS"] },
-             { name: "Marksmanship",  roles: ["DPS"] },
-             { name: "Survival",      roles: ["DPS"] } ],
-  Mage:    [ { name: "Arcane",        roles: ["DPS"] },
-             { name: "Fire",          roles: ["DPS"] },
-             { name: "Frost",         roles: ["DPS"] } ],
-  Paladin: [ { name: "Holy",          roles: ["Healer"] },
-             { name: "Protection",    roles: ["Tank"] },
-             { name: "Retribution",   roles: ["DPS"] } ],
-  Priest:  [ { name: "Discipline",    roles: ["Healer"] },
-             { name: "Holy",          roles: ["Healer"] },
-             { name: "Shadow",        roles: ["DPS"] } ],
-  Rogue:   [ { name: "Assassination", roles: ["DPS"] },
-             { name: "Combat",        roles: ["DPS"] },
-             { name: "Subtlety",      roles: ["DPS"] } ],
-  Shaman:  [ { name: "Elemental",     roles: ["DPS"] },
-             { name: "Enhancement",   roles: ["DPS"] },
-             { name: "Restoration",   roles: ["Healer"] } ],
-  Warlock: [ { name: "Affliction",    roles: ["DPS"] },
-             { name: "Demonology",    roles: ["DPS"] },
-             { name: "Destruction",   roles: ["DPS"] } ],
-  Warrior: [ { name: "Arms",          roles: ["DPS"] },
-             { name: "Fury",          roles: ["DPS"] },
-             { name: "Protection",    roles: ["Tank"] } ],
+  Druid:   ["Balance", "Feral", "Restoration"],
+  Hunter:  ["Beast Mastery", "Marksmanship", "Survival"],
+  Mage:    ["Arcane", "Fire", "Frost"],
+  Paladin: ["Holy", "Protection", "Retribution"],
+  Priest:  ["Discipline", "Holy", "Shadow"],
+  Rogue:   ["Assassination", "Combat", "Subtlety"],
+  Shaman:  ["Elemental", "Enhancement", "Restoration"],
+  Warlock: ["Affliction", "Demonology", "Destruction"],
+  Warrior: ["Arms", "Fury", "Protection"],
 };
 
 const RACES = [

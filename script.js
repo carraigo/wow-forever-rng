@@ -1,7 +1,7 @@
-// Data (GENDERS, FACTIONS, ROLES, RACES, SPECS) lives in data.js, which loads first.
+// Data (GENDERS, FACTIONS, RACES, SPECS) lives in data.js, which loads first.
 
 const ALL_CLASSES = [...new Set(RACES.flatMap(r => r.classes))].sort();
-const RESULT_FIELDS = ["gender", "faction", "race", "class", "spec", "role"];
+const RESULT_FIELDS = ["gender", "faction", "race", "class", "spec"];
 const WEIGHT_RACE = "Per race";
 const WEIGHT_COMBO = "Per combination";
 const HISTORY_MAX = 10;
@@ -23,28 +23,23 @@ function fillSelect(el, values, keepValue, withAny = true) {
 
 const filters = () => ({
   gender: $("fGender").value, faction: $("fFaction").value,
-  race: $("fRace").value, class: $("fClass").value, role: $("fRole").value,
+  race: $("fRace").value, class: $("fClass").value,
 });
 
-const classHasRole = (cls, role) =>
-  role === "Any" || SPECS[cls].some(s => s.roles.includes(role));
-
-// Classes a race can roll right now, given the Class and Role filters.
+// Classes a race can roll right now, given the Class filter.
 function eligibleClasses(race) {
   const f = filters();
-  return race.classes.filter(c =>
-    (f.class === "Any" || c === f.class) && classHasRole(c, f.role));
+  return race.classes.filter(c => f.class === "Any" || c === f.class);
 }
 
-// Race options depend on faction; class options depend on faction, race and role.
+// Race options depend on faction; class options depend on faction and race.
 function refreshOptions() {
   const f = filters();
   const racePool = RACES.filter(r => f.faction === "Any" || r.faction === f.faction);
   fillSelect($("fRace"), [...new Set(racePool.map(r => r.name))], f.race);
   const f2 = filters();
   const classPool = racePool.filter(r => f2.race === "Any" || r.name === f2.race);
-  const classes = [...new Set(classPool.flatMap(r => r.classes))]
-    .filter(c => classHasRole(c, f2.role)).sort();
+  const classes = [...new Set(classPool.flatMap(r => r.classes))].sort();
   fillSelect($("fClass"), classes, f2.class);
   updateHint();
 }
@@ -76,13 +71,8 @@ function genderPool() {
   return g === "Any" ? GENDERS : [g];
 }
 
-// Pick a spec for the class, honouring the Role filter, then a role that
-// spec can fill (random when it can fill more than one).
-function rollSpec(cls) {
-  const role = filters().role;
-  const spec = pick(SPECS[cls].filter(s => role === "Any" || s.roles.includes(role)));
-  return { spec: spec.name, role: role === "Any" ? pick(spec.roles) : role };
-}
+// Pick a random spec for the class.
+const rollSpec = cls => ({ spec: pick(SPECS[cls]) });
 
 function rollAll() {
   const races = matchingRaces();
@@ -108,7 +98,7 @@ function rerollClass() {
   current.class = pick(options);
   Object.assign(current, rollSpec(current.class));
   record(current);
-  show(current, ["class", "spec", "role"]);
+  show(current, ["class", "spec"]);
 }
 
 // Restart the CSS animation on the given result fields, even if the
@@ -136,7 +126,6 @@ function show(c, animateFields = []) {
   $("class").textContent   = c.class;
   $("class").style.color   = `var(--c-${c.class.toLowerCase()})`;
   $("spec").textContent    = c.spec;
-  $("role").textContent    = c.role;
   animate(animateFields);
 }
 
@@ -162,7 +151,6 @@ function renderHistory() {
       [c.race.name],
       [c.class, `var(--c-${c.class.toLowerCase()})`],
       [c.spec],
-      [c.role],
     ];
     for (const [text, color] of parts) {
       const s = document.createElement("span");
@@ -178,15 +166,13 @@ function renderHistory() {
 
 fillSelect($("fGender"), GENDERS);
 fillSelect($("fFaction"), FACTIONS);
-fillSelect($("fRole"), ROLES);
 fillSelect($("fWeight"), [WEIGHT_RACE, WEIGHT_COMBO], WEIGHT_RACE, false);
 refreshOptions();
 
 $("fFaction").addEventListener("change", refreshOptions);
 $("fRace").addEventListener("change", refreshOptions);
-$("fRole").addEventListener("change", refreshOptions);
 $("clear").addEventListener("click", () => {
-  for (const id of ["fGender", "fFaction", "fRace", "fClass", "fRole"]) $(id).value = "Any";
+  for (const id of ["fGender", "fFaction", "fRace", "fClass"]) $(id).value = "Any";
   refreshOptions();
 });
 $("clearHistory").addEventListener("click", () => { rollHistory = []; renderHistory(); });

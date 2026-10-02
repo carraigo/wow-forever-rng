@@ -11,13 +11,14 @@
 <body>
   <h1>Forever Random Character</h1>
 
+  <main class="layout">
+  <section class="roll-col" aria-label="Roll">
   <dl id="result" aria-live="polite" aria-atomic="true">
     <dt>Gender</dt><dd id="gender">–</dd>
     <dt>Faction</dt><dd id="faction">–</dd>
     <dt>Race</dt><dd id="race">–</dd>
     <dt>Class</dt><dd id="class">–</dd>
     <dt>Spec</dt><dd id="spec">–</dd>
-    <dt>Role</dt><dd id="role">–</dd>
   </dl>
   <p class="msg" id="msg" role="status" hidden>No valid combination with these filters.</p>
 
@@ -34,6 +35,9 @@
     <ol id="historyList"></ol>
   </section>
 
+  </section>
+
+  <aside class="filter-col" aria-label="Filters and odds">
   <div class="filters-title">Filters</div>
   <div class="filters">
     <label for="fGender">Gender</label>
@@ -44,11 +48,9 @@
     <select id="fRace"></select>
     <label for="fClass">Class</label>
     <select id="fClass"></select>
-    <label for="fRole">Role</label>
-    <select id="fRole"></select>
   </div>
   <p class="hint" id="hint" role="status" hidden></p>
-  <button id="clear" style="margin-top:24px;padding:8px 20px;font-size:.75rem">Clear filters</button>
+  <button id="clear" class="small" type="button">Clear filters</button>
 
   <div class="filters-title options-title">Odds</div>
   <div class="filters">
@@ -56,6 +58,8 @@
     <select id="fWeight"></select>
   </div>
   <p class="hint">Per race gives every race the same chance. Per combination gives every valid race and class pair the same chance.</p>
+  </aside>
+  </main>
 
 <script src="data.js"></script>
 <script src="script.js"></script>
