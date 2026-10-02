@@ -94,7 +94,10 @@ function rollAll() {
 function rerollClass() {
   if (!current) return rollAll();
   const options = eligibleClasses(current.race).filter(c => c !== current.class);
-  if (!options.length) return show(current, ["class"]);
+  if (!options.length) {
+    // The filters allow only the current class, so there is nothing to switch to.
+    return setNote("No other class matches your filters.");
+  }
   current.class = pick(options);
   Object.assign(current, rollSpec(current.class));
   record(current);
@@ -113,7 +116,14 @@ function animate(fields) {
   });
 }
 
+// Short status line under the buttons; cleared by any roll or filter change.
+function setNote(text = "") {
+  $("note").textContent = text;
+  $("note").hidden = !text;
+}
+
 function show(c, animateFields = []) {
+  setNote();
   $("result").hidden = !c;
   $("msg").hidden = !!c;
   $("rerollClass").disabled = !c;
@@ -169,6 +179,9 @@ fillSelect($("fFaction"), FACTIONS);
 fillSelect($("fWeight"), [WEIGHT_RACE, WEIGHT_COMBO], WEIGHT_RACE, false);
 refreshOptions();
 
+for (const id of ["fGender", "fFaction", "fRace", "fClass", "fWeight"]) {
+  $(id).addEventListener("change", () => setNote());
+}
 $("fFaction").addEventListener("change", refreshOptions);
 $("fRace").addEventListener("change", refreshOptions);
 $("clear").addEventListener("click", () => {

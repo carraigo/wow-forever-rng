@@ -115,3 +115,6 @@ button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
   .filter-col { padding-left: 0; border-left: none; border-top: 1px solid var(--line); padding-top: 32px; align-items: center; text-align: center; }
   .filter-col .filters { text-align: left; }
 }
+
+/* Status line under the roll buttons (e.g. "No other class matches your filters."). */
+.note { color: var(--muted); font-size: .8rem; margin: -24px 0 32px; }
