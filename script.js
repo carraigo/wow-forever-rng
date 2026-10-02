@@ -1,22 +1,7 @@
-const GENDERS = ["Male", "Female"];
+// Data (GENDERS, FACTIONS, RACES) lives in data.js, which loads first.
 
-const RACES = [
-  // Alliance
-  { faction: "Alliance", name: "Human",     classes: ["Hunter","Mage","Paladin","Priest","Rogue","Warlock","Warrior"] },
-  { faction: "Alliance", name: "Dwarf",     classes: ["Hunter","Paladin","Priest","Rogue","Shaman","Warrior"] },
-  { faction: "Alliance", name: "Gnome",     classes: ["Mage","Priest","Rogue","Warlock","Warrior"] },
-  { faction: "Alliance", name: "Night Elf", classes: ["Druid","Hunter","Priest","Rogue","Warrior"] },
-  { faction: "Alliance", name: "Skyborne",  classes: ["Druid","Hunter","Mage","Rogue","Warrior"] },
-  // Horde
-  { faction: "Horde", name: "Orc",      classes: ["Hunter","Mage","Rogue","Shaman","Warlock","Warrior"] },
-  { faction: "Horde", name: "Undead",   classes: ["Mage","Paladin","Priest","Rogue","Warlock","Warrior"] },
-  { faction: "Horde", name: "Tauren",   classes: ["Druid","Hunter","Shaman","Warrior"] },
-  { faction: "Horde", name: "Troll",    classes: ["Hunter","Mage","Priest","Rogue","Shaman","Warlock","Warrior"] },
-  { faction: "Horde", name: "Skyborne", classes: ["Druid","Hunter","Rogue","Shaman","Warrior"] },
-];
-
-const FACTIONS = ["Alliance", "Horde"];
 const ALL_CLASSES = [...new Set(RACES.flatMap(r => r.classes))].sort();
+const RESULT_FIELDS = ["gender", "faction", "race", "class"];
 
 const $ = id => document.getElementById(id);
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
@@ -45,6 +30,20 @@ function refreshOptions() {
   const f2 = filters();
   const classPool = racePool.filter(r => f2.race === "Any" || r.name === f2.race);
   fillSelect($("fClass"), [...new Set(classPool.flatMap(r => r.classes))].sort(), f2.class);
+  updateHint();
+}
+
+// A race that exists in both factions (e.g. Skyborne) is rolled 50/50
+// between them unless a faction filter is set. Tell the user.
+function updateHint() {
+  const f = filters();
+  const shared = f.race !== "Any" && f.faction === "Any" &&
+    RACES.filter(r => r.name === f.race).length > 1;
+  $("hint").hidden = !shared;
+  if (shared) {
+    $("hint").textContent =
+      `${f.race} is available to both factions. Faction will be picked at random unless you set one.`;
+  }
 }
 
 function matchingRaces() {
@@ -71,17 +70,29 @@ function rollAll() {
   if (!races.length) return show(null);
   const race = pick(races);
   current = { gender: pick(genderPool()), race, class: pick(classPoolFor(race)) };
-  show(current);
+  show(current, RESULT_FIELDS);
 }
 
 function rerollClass() {
   if (!current) return rollAll();
   const options = classPoolFor(current.race).filter(c => c !== current.class);
   if (options.length) current.class = pick(options);
-  show(current);
+  show(current, ["class"]);
 }
 
-function show(c) {
+// Restart the CSS animation on the given result fields, even if the
+// value is identical to last time. Fields stagger top to bottom.
+function animate(fields) {
+  fields.forEach((id, i) => {
+    const el = $(id);
+    el.style.setProperty("--i", i);
+    el.classList.remove("roll");
+    void el.offsetWidth; // force reflow so the animation restarts
+    el.classList.add("roll");
+  });
+}
+
+function show(c, animateFields = []) {
   $("result").hidden = !c;
   $("msg").hidden = !!c;
   if (!c) { delete document.documentElement.dataset.faction; return; }
@@ -92,6 +103,7 @@ function show(c) {
   $("race").textContent    = c.race.name;
   $("class").textContent   = c.class;
   $("class").style.color   = `var(--c-${c.class.toLowerCase()})`;
+  animate(animateFields);
 }
 
 fillSelect($("fGender"), GENDERS);
