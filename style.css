@@ -144,14 +144,14 @@ button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
 @media (max-width: 440px) { .backstory { min-height: 6em; } }
 @media (max-width: 340px) { .backstory { min-height: 7.5em; } }
 
-/* Price tags on buttons (oracle mode), in gold. On the filled "Roll all"
+/* Price tags on buttons (Joelinton mode), in gold. On the filled "Roll all"
    button gold would be hard to read, so there the tag keeps the button's
    own text colour. */
 .cost { text-transform: none; letter-spacing: 0; color: var(--gold); margin-left: 4px; }
 .cost:empty { display: none; }
 #roll .cost { color: inherit; opacity: .8; }
 
-/* The oracle panel under the roll buttons. */
+/* Joelinton's panel under the roll buttons. */
 .oracle { width: 100%; max-width: 40ch; margin: -8px 0 40px; }
 .oracle .purse { margin: 0 0 12px; font-size: .8rem; color: var(--muted); display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
 /* The purse in gold, with a small coin drawn in front of it. */

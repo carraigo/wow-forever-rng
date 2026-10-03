@@ -11,7 +11,7 @@
 //   3. State             what the page remembers while it is open
 //   4. Filters           the dropdowns and which race/class pairs they allow
 //   5. Building          making a character and its backstory
-//   6. The oracle        the optional mode where rerolls cost gold
+//   6. Joelinton         the optional mode where rerolls cost gold
 //   7. Actions           what each button does
 //   8. Display           putting things on screen
 //   9. History           the list of recent rolls
@@ -33,13 +33,13 @@ const RESULT_FIELDS = ["gender", "faction", "race", "class", "spec"];
 // the five result fields plus "backstory" in one new list.
 const ANIMATE_ALL = [...RESULT_FIELDS, "backstory"];
 
-// Oracle mode: prices and odds (gold).
+// Joelinton mode: prices and odds (gold).
 const ORACLE_START = 50;
 const PRICE = { roll: 10, class: 5, backstory: 3 };
 // Object.values(PRICE) is [10, 5, 3]. Math.min wants separate numbers rather
 // than a list, so "..." unpacks them: Math.min(10, 5, 3).
 const CHEAPEST = Math.min(...Object.values(PRICE));
-const ARGUE_COST = 2;        // the oracle bills for her time
+const ARGUE_COST = 2;        // Joelinton bills for the time
 const OFFENDED_FINE = 5;
 const RELENT_CHANCE = 0.30;  // argue: free reroll
 const REFUSE_CHANCE = 0.35;  // argue: nothing happens (the rest: a fine)
@@ -95,7 +95,7 @@ let current = null;          // the character on screen (null = none rolled yet)
 let rollHistory = [];        // recent characters, newest first
 let nextId = 1;              // each new character gets the next number as its id
 const oracle = {
-  on: false,                 // is oracle mode switched on?
+  on: false,                 // is Joelinton mode switched on?
   purse: ORACLE_START,       // gold left
   free: 0,                   // free rerolls won by arguing
   firstRollFree: false,      // true until the first "Roll all" after switching on
@@ -217,7 +217,7 @@ function setClass(character, cls) {
   character.backstory = makeBackstory(character);
 }
 
-// ---- 6. The oracle: optional mode where rerolls cost gold ----
+// ---- 6. Joelinton: optional mode where rerolls cost gold ----
 // "kind" below is always one of the keys of PRICE: "roll", "class" or "backstory".
 
 function oracleSay(text) {
@@ -235,9 +235,9 @@ function canAfford(kind) {
   return oracle.purse >= priceOf(kind);
 }
 
-// Pay for an action and get the oracle's line about it. Three possible results:
-//   ""         oracle mode is off, so there is nothing to pay and nothing to say
-//   a string   paid (or free): this is what the oracle says about it
+// Pay for an action and get Joelinton's line about it. Three possible results:
+//   ""         Joelinton mode is off, so there is nothing to pay and nothing to say
+//   a string   paid (or free): this is what Joelinton says about it
 //   null       can't afford it; the caller must stop and not do the action
 // The checks run in order, and each "return" ends the function, so a later
 // check only runs if every earlier one did not apply.
@@ -262,13 +262,13 @@ function charge(kind) {
   }
 
   oracle.purse -= cost;
-  // If that payment leaves too little for even the cheapest action, the
-  // oracle says so instead of her usual "that will be N gold".
+  // If that payment leaves too little for even the cheapest action,
+  // Joelinton says so instead of the usual "that will be N gold".
   const lines = oracle.purse < CHEAPEST ? ORACLE.broke : ORACLE.paid;
   return fill(pick(lines), { cost });
 }
 
-// The oracle's comment on a freshly rolled character, based on its class or race.
+// Joelinton's comment on a freshly rolled character, based on its class or race.
 function reaction(character) {
   // "?? []" means "if there is no entry for this class/race, use an empty
   // list instead", so a race or class without lines doesn't cause an error.
@@ -278,7 +278,7 @@ function reaction(character) {
   return lines.length ? pick(lines) : "";
 }
 
-// Have the oracle say several things in one go, e.g. announce(price, comment).
+// Have Joelinton say several things in one go, e.g. announce(price, comment).
 // "...parts" collects however many arguments were passed into one list.
 // filter(Boolean) drops the empty ones, and join(" ") glues the rest together
 // with spaces.
@@ -289,9 +289,9 @@ function announce(...parts) {
 // "Argue" button: pay a small fee, then one of three things happens.
 // One random number from 0 to 1 decides which, by where it lands. With the
 // settings at the top of this file (0.30 and 0.35) that works out as:
-//   0.00 to 0.30   she relents: one free reroll        (RELENT_CHANCE)
-//   0.30 to 0.65   she refuses: nothing happens        (REFUSE_CHANCE)
-//   0.65 to 1.00   she is offended: a fine             (whatever is left)
+//   0.00 to 0.30   relents: one free reroll            (RELENT_CHANCE)
+//   0.30 to 0.65   refuses: nothing happens            (REFUSE_CHANCE)
+//   0.65 to 1.00   is offended: a fine                 (whatever is left)
 function argue() {
   if (oracle.purse < ARGUE_COST) return;
   oracle.purse -= ARGUE_COST;
@@ -303,7 +303,7 @@ function argue() {
   } else if (luck < RELENT_CHANCE + REFUSE_CHANCE) {
     oracleSay(pick(ORACLE.refuse));
   } else {
-    // She can't take more gold than you have left.
+    // Joelinton can't take more gold than you have left.
     const loss = Math.min(OFFENDED_FINE, oracle.purse);
     oracle.purse -= loss;
     oracleSay(loss > 0 ? fill(pick(ORACLE.offended), { loss }) : pick(ORACLE.nothingToTake));
@@ -318,7 +318,7 @@ function priceTag(kind) {
   return price === 0 ? "(free)" : `(${price}g)`;
 }
 
-// Switch oracle mode on or off. Either way the purse starts over.
+// Switch Joelinton mode on or off. Either way the purse starts over.
 function setOracleMode(on) {
   oracle.on = on;
   oracle.purse = ORACLE_START;
@@ -359,7 +359,7 @@ function chooseRaceAndClass(pairs) {
   return pick(pairs.filter(pair => pair.race === race));
 }
 
-// Show a new character: save it to history, display it, and let the oracle comment.
+// Show a new character: save it to history, display it, and let Joelinton comment.
 function commit(oracleLine, animateFields) {
   record(current);
   renderCharacter(current, animateFields);
@@ -600,7 +600,7 @@ $("rerollBackstory").addEventListener("click", rerollBackstory);
 $("clearHistory").addEventListener("click", clearRollHistory);
 $("historyList").addEventListener("click", restoreFromHistory);
 
-// The oracle. "event.target" is the checkbox; .checked is true when ticked.
+// Joelinton. "event.target" is the checkbox; .checked is true when ticked.
 $("oracleMode").addEventListener("change", event => setOracleMode(event.target.checked));
 $("argue").addEventListener("click", argue);
 
