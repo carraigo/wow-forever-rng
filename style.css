@@ -7,6 +7,7 @@
   --c-druid:#b84f00; --c-hunter:#4f7a1a; --c-mage:#0a769a;
   --c-paladin:#b8426f; --c-priest:#6b6b6b; --c-rogue:#806e00;
   --c-shaman:#0058b0; --c-warlock:#5e5fd0; --c-warrior:#8a6334;
+  --gold:#8a6100;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -15,6 +16,7 @@
     --c-druid:#ff7c0a; --c-hunter:#aad372; --c-mage:#3fc7eb;
     --c-paladin:#f48cba; --c-priest:#ffffff; --c-rogue:#fff468;
     --c-shaman:#3a93f2; --c-warlock:#8788ee; --c-warrior:#c69b6d;
+    --gold:#f0b93a;
   }
 }
 :root[data-faction="Alliance"] { --accent:var(--alliance); --accent-line:var(--alliance); }
@@ -24,11 +26,16 @@
    override the [hidden] attribute. */
 [hidden] { display: none !important; }
 html, body { min-height: 100%; margin: 0; }
+/* Keep room for the scrollbar at all times, so the page does not shift
+   sideways when the content grows tall enough to need one. */
+html { scrollbar-gutter: stable; }
 body {
   background: var(--bg); color: var(--fg);
   font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  text-align: center; padding: 32px 24px;
+  /* Content starts from the top rather than being centred vertically:
+     centred content moves every time something appears below it. */
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  text-align: center; padding: clamp(32px, 10vh, 96px) 24px 32px;
   min-height: 100vh; min-height: 100dvh; /* dvh avoids jumps from mobile browser bars */
 }
 h1 {
@@ -68,6 +75,15 @@ button, select {
 button:hover, button:focus-visible, select:hover, select:focus-visible { border-color: var(--accent); outline: none; }
 button:disabled { opacity: .4; cursor: not-allowed; }
 button:disabled:hover { border-color: var(--line); }
+/* The main action is filled with the accent colour: neutral until a
+   character is rolled, then the faction's blue or red. */
+#roll {
+  background: var(--accent); border-color: var(--accent); color: var(--bg);
+  transition: background-color .3s, border-color .3s, opacity .2s;
+}
+#roll:hover { opacity: .85; }
+#roll:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+#roll:disabled, #roll:disabled:hover { opacity: .4; }
 select { padding: 8px 12px; letter-spacing: .05em; text-transform: none; font-size: .9rem; }
 option { background: var(--bg); color: var(--fg); }
 .filters { display: grid; grid-template-columns: auto auto; gap: 10px 16px; align-items: center; text-align: left; }
@@ -118,18 +134,37 @@ button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
 /* Status line under the roll buttons (e.g. "No other class matches your filters."). */
 .note { color: var(--muted); font-size: .8rem; margin: -24px 0 32px; }
 
-/* Backstory hook under the result. */
+/* Backstory hook under the result. Its space is kept even while it is
+   hidden (before the first roll), and the text always has room for its
+   longest version, so the buttons underneath stay where they are. */
 .backstory-wrap { margin: -16px 0 40px; max-width: 40ch; }
-.backstory { margin: 0 0 8px; font-size: 1rem; line-height: 1.5; font-style: italic; }
+.backstory-wrap[hidden] { display: block !important; visibility: hidden; }
+.backstory { margin: 0 0 8px; min-height: 4.5em; font-size: 1rem; line-height: 1.5; font-style: italic; }
+/* On a phone the lines are shorter, so the longest backstory needs more of them. */
+@media (max-width: 440px) { .backstory { min-height: 6em; } }
+@media (max-width: 340px) { .backstory { min-height: 7.5em; } }
 
-/* Price tags on buttons (oracle mode). */
-.cost { text-transform: none; letter-spacing: 0; opacity: .7; margin-left: 4px; }
+/* Price tags on buttons (oracle mode), in gold. On the filled "Roll all"
+   button gold would be hard to read, so there the tag keeps the button's
+   own text colour. */
+.cost { text-transform: none; letter-spacing: 0; color: var(--gold); margin-left: 4px; }
 .cost:empty { display: none; }
+#roll .cost { color: inherit; opacity: .8; }
 
 /* The oracle panel under the roll buttons. */
-.oracle { max-width: 40ch; margin: -8px 0 40px; }
-.oracle .purse { margin: 0 0 8px; font-size: .8rem; color: var(--muted); display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-.oracle .say { margin: 0; min-height: 4.5em; font-size: .9rem; line-height: 1.5; font-style: italic; }
+.oracle { width: 100%; max-width: 40ch; margin: -8px 0 40px; }
+.oracle .purse { margin: 0 0 12px; font-size: .8rem; color: var(--muted); display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+/* The purse in gold, with a small coin drawn in front of it. */
+#purse { color: var(--gold); font-weight: 600; }
+#purse::before {
+  content: ""; display: inline-block; width: .7em; height: .7em; margin-right: .5em;
+  border-radius: 50%; background: var(--gold);
+}
+/* What Joelinton says, set apart as a quote with a gold rule down the side. */
+.oracle .say {
+  margin: 0; min-height: 4.5em; font-size: .9rem; line-height: 1.5; font-style: italic;
+  text-align: left; padding: 2px 0 2px 16px; border-left: 2px solid var(--gold);
+}
 .oracle .small { margin-top: 12px; }
 .check { display: flex; align-items: center; gap: 8px; font-size: .9rem; cursor: pointer; }
 .check input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }

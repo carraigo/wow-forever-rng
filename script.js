@@ -78,6 +78,17 @@ const classColor = cls => `var(--c-${cls.toLowerCase()})`;
 // the braces, and returns what to put there instead.
 const fill = (text, values) => text.replace(/\{(\w+)\}/g, (_, name) => values[name]);
 
+// Tell the analytics (GoatCounter) that something happened, e.g. a roll, so
+// its dashboard shows how the page is used and not only that it was opened.
+// "name" is what the event is listed under: "roll-all", "reroll-class" or
+// "reroll-backstory".
+// GoatCounter's script is loaded separately by index.html. It may not have
+// arrived yet, may be blocked by an ad blocker, or may not be on the page at
+// all, and then window.goatcounter (or its count function) does not exist.
+// "?." means "if this is missing, stop here and do nothing" instead of
+// causing an error, so rolling works either way.
+const countEvent = name => window.goatcounter?.count?.({ path: name, title: name, event: true });
+
 // ---- 3. State ----
 // Everything the page remembers. It is all lost on refresh.
 let current = null;          // the character on screen (null = none rolled yet)
@@ -377,6 +388,7 @@ function rollAll() {
   };
   setClass(current, choice.cls);     // adds id, class, spec and backstory
   commit(oracleLine, ANIMATE_ALL);
+  countEvent("roll-all");
 }
 
 // "Reroll class" button: same gender and race, different class.
@@ -399,6 +411,7 @@ function rerollClass() {
 
   setClass(current, pick(options).cls);
   commit(oracleLine, ["class", "spec", "backstory"]);
+  countEvent("reroll-class");
 }
 
 // "Reroll backstory" link: keep the same character and write a new backstory for it.
@@ -415,6 +428,7 @@ function rerollBackstory() {
 
   renderCharacter(current, ["backstory"]);
   announce(oracleLine);
+  countEvent("reroll-backstory");
 }
 
 // "Clear filters" button. The "Exclude Skyborne" checkbox is left as it is.

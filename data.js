@@ -88,7 +88,7 @@ const BACKSTORY = {
   },
 };
 
-// ---- The oracle (optional mode: rerolls cost gold) ----
+// ---- Joelinton (optional mode: rerolls cost gold) ----
 // {gold}, {cost} and {loss} are filled in by script.js.
 const ORACLE = {
   welcome: [
@@ -114,19 +114,19 @@ const ORACLE = {
     "No gold, no reroll. Fate has spoken.",
   ],
   relent: [
-    "The oracle sighs. Fine. One free reroll, and no more complaining.",
+    "Joelinton sighs. Fine. One free reroll, and no more complaining.",
     "Very well. You wear me down. One free reroll.",
   ],
   refuse: [
-    "The oracle stares at you. The answer is still no.",
+    "Joelinton stares at you. The answer is still no.",
     "I have heard that argument from far better-dressed adventurers. No.",
     "Interesting. Wrong, but interesting.",
   ],
   offended: [
-    "The oracle is offended. {loss} gold for your insolence.",
+    "Joelinton is offended. {loss} gold for your insolence.",
     "How dare you. {loss} gold, for the insult.",
   ],
-  // The oracle's comment on a new character. One line is picked from the
+  // Joelinton's comment on a new character. One line is picked from the
   // character's class and race lines together.
   reactClass: {
     Druid:   ["A Druid. The trees were expecting you.", "A Druid? Try not to turn into anything I would have to clean up."],
@@ -144,13 +144,13 @@ const ORACLE = {
     "Dwarf":     ["A Dwarf. I trust you brought your own ale.", "A Dwarf. Stout of heart, short of patience."],
     "Gnome":     ["A Gnome. Small, clever and probably on fire.", "A Gnome. Bold. Short, but bold."],
     "Night Elf": ["A Night Elf. You have seen a lot. Please do not mention it.", "A Night Elf. The moon is not impressed either."],
-    "Skyborne":  ["A Skyborne. You came a long way for this.", "A Skyborne. Mind the ceiling, and the oracle."],
+    "Skyborne":  ["A Skyborne. You came a long way for this.", "A Skyborne. Mind the ceiling, and Joelinton."],
     "Orc":       ["An Orc. Let us keep the shouting to a minimum.", "An Orc. A fine choice, if you enjoy being right."],
     "Undead":    ["An Undead. You look better than most of my customers.", "An Undead. Terribly fashionable."],
     "Tauren":    ["A Tauren. Mind the doorframe.", "A Tauren. Gentle giant. Mostly."],
     "Troll":     ["A Troll. Regenerating already, I see.", "A Troll. Ya, mon. Do not repeat that."],
   },
   nothingToTake: [
-    "The oracle would fine you for that, but your purse is already empty.",
+    "Joelinton would fine you for that, but your purse is already empty.",
   ],
 };
