@@ -475,6 +475,9 @@ function renderCharacter(character, animateFields = []) {
   $("result").hidden = !hasCharacter;
   $("msg").hidden = hasCharacter;
   $("backstoryWrap").hidden = !hasCharacter;
+  // The "Roll to meet your character." prompt is only for a page that has
+  // not been rolled on yet, so the first roll removes it for good.
+  $("prompt").hidden = true;
   renderOracle();
 
   // document.documentElement is the <html> element. Its data-faction
@@ -563,8 +566,17 @@ function restoreFromHistory(event) {
   if (!button) return;               // the click missed every button
   // dataset values are always text, so "2" is turned back into the number 2.
   // Restoring uses a copy, for the same reason record() saves one.
-  current = { ...rollHistory[Number(button.dataset.i)] };
+  const saved = rollHistory[Number(button.dataset.i)];
+  // Is this a different character from the one on screen? Each character
+  // has its own id, so comparing ids answers that. ("!current" covers the
+  // case where nothing is on screen at all.)
+  const isDifferent = !current || saved.id !== current.id;
+  current = { ...saved };
   renderCharacter(current, ANIMATE_ALL);
+  // Going back to an earlier character costs nothing, even in Joelinton
+  // mode. Joelinton lets it happen but has something to say about it.
+  // (announce() does nothing while the mode is off.)
+  if (isDifferent) announce(pick(ORACLE.restore));
 }
 
 // ---- 10. Wiring ----

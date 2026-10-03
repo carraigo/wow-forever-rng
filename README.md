@@ -11,7 +11,7 @@ A small static page that rolls a random World of Warcraft character: gender, fac
 - **Backstory:** each roll comes with a one-line backstory hook. "Reroll backstory" writes a new one for the same character, and "Reroll class" writes a new one to match the new class.
 - **Joelinton mode:** tick "Consult Joelinton" and rerolls cost gold: Roll all 10, Reroll class 5, Reroll backstory 3. You start with 50 gold and the first "Roll all" after switching the mode on is free. "Argue with Joelinton" costs 2 gold and has a 30% chance of a free reroll, a 35% chance of nothing and a 35% chance of a 5 gold fine. Turning the mode off and on resets the purse.
 - **Roll counting:** if the GoatCounter script is on the page, each roll sends it an event (`roll-all`, `reroll-class` or `reroll-backstory`), so the dashboard shows how often people roll and not only how often the page is opened. Without the script, or with it blocked, rolling works as normal.
-- **History:** the last 3 rolls are listed under the result. Click one to restore it. History is kept for the current visit only and clears on refresh.
+- **History:** the last 3 rolls are listed under the result. Click one to restore it. Restoring is free even in Joelinton mode, though Joelinton comments on it. History is kept for the current visit only and clears on refresh.
 
 ## Running it
 
@@ -34,7 +34,7 @@ All game data is in `data.js`. Edit the `RACES` array; nothing else needs to cha
 - A race playable by both factions (currently Skyborne) is listed once per faction. When the Faction filter is "Any", that race rolls its faction at random.
 - Specs are in the `SPECS` object, keyed by class, as a list of spec names. Check this table against your ruleset.
 - Backstory lines are in `BACKSTORY`: general pasts and goals, plus extra pasts per class and extra goals per faction. Each past starts with "who" or "whose" and each goal reads after a comma. Add or edit lines freely.
-- Joelinton's lines are in `ORACLE`, including `reactClass` and `reactRace`, the comments on each new character. Prices, odds and the starting purse are constants at the top of `script.js`.
+- Joelinton's lines are in `ORACLE`, including `reactClass` and `reactRace`, the comments on each new character, and `restore`, the comments when a character is brought back from history. Prices, odds and the starting purse are constants at the top of `script.js`.
 - The purse and price tags use `--gold` in `style.css`, set once for light mode and once for dark.
 - A new class needs a color variable in `style.css`, named `--c-<classname>` in lowercase (for example `--c-monk`), in both the light and dark blocks.
 

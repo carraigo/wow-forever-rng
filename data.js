@@ -150,6 +150,14 @@ const ORACLE = {
     "Tauren":    ["A Tauren. Mind the doorframe.", "A Tauren. Gentle giant. Mostly."],
     "Troll":     ["A Troll. Regenerating already, I see.", "A Troll. Ya, mon. Do not repeat that."],
   },
+  // Joelinton's comment when a character is brought back from the history
+  // list. Going back is free, and Joelinton has noticed.
+  restore: [
+    "Back to an old one, and not a coin for me. I have noticed.",
+    "Fate does not give refunds. And yet here you are, getting one.",
+    "Going back costs you nothing. Do not think I approve.",
+    "Ah, the one you rolled away from. Bold.",
+  ],
   nothingToTake: [
     "Joelinton would fine you for that, but your purse is already empty.",
   ],

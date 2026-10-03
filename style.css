@@ -137,8 +137,16 @@ button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
 /* Backstory hook under the result. Its space is kept even while it is
    hidden (before the first roll), and the text always has room for its
    longest version, so the buttons underneath stay where they are. */
-.backstory-wrap { margin: -16px 0 40px; max-width: 40ch; }
+.backstory-wrap { position: relative; width: 100%; max-width: 40ch; margin: -16px 0 40px; }
 .backstory-wrap[hidden] { display: block !important; visibility: hidden; }
+/* A prompt shown in that kept space until the first roll. It sits on top
+   of the (still invisible) backstory area, so it adds no height of its own. */
+.prompt { display: none; }
+.backstory-wrap[hidden] .prompt {
+  visibility: visible; position: absolute; inset: 0; margin: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted); font-size: 1rem; font-style: italic;
+}
 .backstory { margin: 0 0 8px; min-height: 4.5em; font-size: 1rem; line-height: 1.5; font-style: italic; }
 /* On a phone the lines are shorter, so the longest backstory needs more of them. */
 @media (max-width: 440px) { .backstory { min-height: 6em; } }
