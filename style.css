@@ -21,6 +21,16 @@
 }
 :root[data-faction="Alliance"] { --accent:var(--alliance); --accent-line:var(--alliance); }
 :root[data-faction="Horde"]    { --accent:var(--horde);    --accent-line:var(--horde); }
+/* The page background leans very slightly towards the rolled faction's
+   colour. --tint is how much of it is mixed in: a touch more in dark mode,
+   where a few percent over near-black is hard to notice at all. Browsers
+   without color-mix() just keep the plain background. */
+:root { --page-bg:var(--bg); --tint:5%; }
+@media (prefers-color-scheme: dark) { :root { --tint:8%; } }
+@supports (background: color-mix(in srgb, red, blue)) {
+  :root[data-faction="Alliance"] { --page-bg:color-mix(in srgb, var(--alliance) var(--tint), var(--bg)); }
+  :root[data-faction="Horde"]    { --page-bg:color-mix(in srgb, var(--horde) var(--tint), var(--bg)); }
+}
 * { box-sizing: border-box; }
 /* Author display rules (e.g. dl { display: grid }) would otherwise
    override the [hidden] attribute. */
@@ -30,7 +40,8 @@ html, body { min-height: 100%; margin: 0; }
    sideways when the content grows tall enough to need one. */
 html { scrollbar-gutter: stable; }
 body {
-  background: var(--bg); color: var(--fg);
+  background: var(--page-bg); color: var(--fg);
+  transition: background-color .8s ease;
   font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
   /* Content starts from the top rather than being centred vertically:
      centred content moves every time something appears below it. */
