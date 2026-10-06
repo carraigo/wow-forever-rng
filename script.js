@@ -25,6 +25,8 @@ const WEIGHT_RACE = "Per race";
 const WEIGHT_COMBO = "Per combination";
 const PAYWALLED_RACE = "Skyborne";   // can be excluded with a checkbox
 const HISTORY_MAX = 3;
+// Filters are saved in the browser under this name, so they survive a refresh.
+const STORAGE_KEY = "forever-rng-filters";
 
 // These are the ids of elements in index.html.
 const FILTER_IDS = ["fGender", "fFaction", "fRace", "fClass"];
@@ -187,6 +189,39 @@ function validPairs(filters = readFilters()) {
     }
   }
   return pairs;
+}
+
+// Remember the filters between visits. localStorage is a small store the
+// browser keeps for this page. It can be blocked (private windows, strict
+// privacy settings) and then reading or writing throws an error, so both are
+// wrapped in try/catch: if it fails the page simply forgets, as it used to.
+const SAVED_IDS = [...FILTER_IDS, "fWeight"];
+
+function saveFilters() {
+  const saved = { excludePaywalled: $("excludePaywalled").checked };
+  for (const id of SAVED_IDS) saved[id] = $(id).value;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+  } catch {}
+}
+
+function loadFilters() {
+  let saved = null;
+  try {
+    saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  } catch {}
+  if (!saved) return;
+
+  $("excludePaywalled").checked = saved.excludePaywalled === true;
+  // The race and class choices depend on the dropdowns above them, so the
+  // options are rebuilt after each one is set, top to bottom.
+  for (const id of SAVED_IDS) {
+    if (saved[id] !== undefined) $(id).value = saved[id];
+    // A saved choice that no longer exists leaves the dropdown blank; go
+    // back to its first option ("Any", or "Per race" for weighting).
+    if ($(id).value === "") $(id).selectedIndex = 0;
+    refreshOptions();
+  }
 }
 
 // ---- 5. Building a character ----
@@ -435,6 +470,7 @@ function rerollBackstory() {
 function clearFilters() {
   for (const id of FILTER_IDS) $(id).value = ANY;
   refreshOptions();
+  saveFilters();
 }
 
 // ---- 8. Display ----
@@ -587,6 +623,7 @@ fillSelect($("fGender"), GENDERS);
 fillSelect($("fFaction"), FACTIONS);
 fillSelect($("fWeight"), [WEIGHT_RACE, WEIGHT_COMBO], WEIGHT_RACE, false);
 refreshOptions();
+loadFilters();
 
 // addEventListener(what, fn) means "when this happens to that element, run
 // fn". The function is passed by name, without brackets: writing rollAll()
@@ -602,6 +639,12 @@ $("fFaction").addEventListener("change", refreshOptions);
 $("fRace").addEventListener("change", refreshOptions);
 $("excludePaywalled").addEventListener("change", () => { refreshOptions(); setNote(); });
 $("clear").addEventListener("click", clearFilters);
+// Save after the lines above have run, so the saved race and class are the
+// ones left after the dropdowns were rebuilt. (Listeners run in the order
+// they were added.)
+for (const id of [...SAVED_IDS, "excludePaywalled"]) {
+  $(id).addEventListener("change", saveFilters);
+}
 
 // Rolling.
 $("roll").addEventListener("click", rollAll);
