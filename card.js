@@ -17,6 +17,8 @@ const CARD_HEIGHT = 630;
 const CARD_PAD = 80;                 // space between the edge and the text
 const CARD_TEXT_WIDTH = 760;         // the text column; the icon sits to its right
 const CARD_FONT = 'system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif';
+// The site's address, printed on every card so people can find it.
+const SITE_URL = "https://carraigo.github.io/wow-forever-rng/";
 
 // The card is always dark, whatever the page theme, so these are the dark
 // colours from style.css written out. (A canvas can't read var(--...) itself.)
@@ -166,20 +168,22 @@ function drawCard(character) {
   ctx.font = cardFont(100);
   ctx.fillText(CLASS_ICONS[character.class] || "🎲", iconX, iconY + 6);
 
-  // Footer: the site's name on the left; the address and date on the right.
+  // Footer: the site's name on the left; its address and the date on the right.
   ctx.textBaseline = "alphabetic";
   ctx.textAlign = "left";
   ctx.font = cardFont(24, 700);
   ctx.fillStyle = CARD_COLORS.fg;
-  ctx.fillText("🎲 Forever Random Character", CARD_PAD, 570);
-  // Opened straight from a file there is no web address to show, so only
-  // the date goes in.
+  const siteName = "🎲 Forever Random Character";
+  ctx.fillText(siteName, CARD_PAD, 570);
+  // The address and date get whatever room the name leaves, less a 40px
+  // gap, and shrink if some computer's font draws them wider than that.
+  const room = CARD_WIDTH - 2 * CARD_PAD - ctx.measureText(siteName).width - 40;
   const date = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
-  const where = location.protocol.startsWith("http") ? `${location.host} · ` : "";
+  const footer = `${SITE_URL} · Rolled ${date}`;
   ctx.textAlign = "right";
-  ctx.font = cardFont(22);
+  fitFont(ctx, footer, 22, room, 400);
   ctx.fillStyle = CARD_COLORS.muted;
-  ctx.fillText(`${where}Rolled ${date}`, CARD_WIDTH - CARD_PAD, 570);
+  ctx.fillText(footer, CARD_WIDTH - CARD_PAD, 570);
 
   return canvas;
 }
