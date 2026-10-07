@@ -466,9 +466,11 @@ function rerollBackstory() {
   countEvent("reroll-backstory");
 }
 
-// "Clear filters" button. The "Exclude Skyborne" checkbox is left as it is.
+// "Clear filters" button. Also unticks "Exclude Skyborne", before the
+// dropdowns are rebuilt so Skyborne is back in the Race list.
 function clearFilters() {
   for (const id of FILTER_IDS) $(id).value = ANY;
+  $("excludePaywalled").checked = false;
   refreshOptions();
   saveFilters();
 }
