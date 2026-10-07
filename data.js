@@ -26,6 +26,21 @@ const SPECS = {
   Warrior: ["Arms", "Fury", "Protection"],
 };
 
+// A simple symbol per class for the downloadable character card (card.js).
+// These are ordinary emoji rather than Blizzard's class icons. A new class
+// needs one here too.
+const CLASS_ICONS = {
+  Druid:   "🌿",
+  Hunter:  "🏹",
+  Mage:    "🔮",
+  Paladin: "🛡️",
+  Priest:  "🕯️",
+  Rogue:   "🗡️",
+  Shaman:  "⚡",
+  Warlock: "💀",
+  Warrior: "⚔️",
+};
+
 const RACES = [
   // Alliance
   { faction: "Alliance", name: "Human",     classes: ["Hunter","Mage","Paladin","Priest","Rogue","Warlock","Warrior"] },

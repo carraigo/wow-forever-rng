@@ -159,6 +159,8 @@ button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
   color: var(--muted); font-size: 1rem; font-style: italic;
 }
 .backstory { margin: 0 0 8px; min-height: 4.5em; font-size: 1rem; line-height: 1.5; font-style: italic; }
+/* "Reroll backstory" and "Save card" side by side under the backstory. */
+.story-actions { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
 /* On a phone the lines are shorter, so the longest backstory needs more of them. */
 @media (max-width: 440px) { .backstory { min-height: 6em; } }
 @media (max-width: 340px) { .backstory { min-height: 7.5em; } }
