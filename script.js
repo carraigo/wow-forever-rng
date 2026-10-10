@@ -424,6 +424,7 @@ function rollAll() {
   setClass(current, choice.cls);     // adds id, class, spec and backstory
   commit(oracleLine, ANIMATE_ALL);
   countEvent("roll-all");
+  summon(current);                   // the reveal ceremony, in summon.js
 }
 
 // "Reroll class" button: same gender and race, different class.

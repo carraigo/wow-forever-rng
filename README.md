@@ -13,6 +13,7 @@ A small static page that rolls a random World of Warcraft character: gender, fac
 - **Roll counting:** if the GoatCounter script is on the page, each roll sends it an event (`roll-all`, `reroll-class` or `reroll-backstory`), so the dashboard shows how often people roll and not only how often the page is opened. Without the script, or with it blocked, rolling works as normal.
 - **History:** the last 3 rolls are listed under the result. Click one to restore it. Restoring is free even in Joelinton mode, though Joelinton comments on it. History is kept for the current visit only and clears on refresh.
 - **Character card:** "Save card" under the backstory makes a 1200×630 PNG of the character on screen, in its class colour with a faction badge, a simple class symbol, the backstory and the site's address. With Joelinton mode on, the card also shows the gold left. On a computer it downloads; on a phone it opens the share menu. It also counts as a `save-card` event in GoatCounter.
+- **The summoning:** after each "Roll all" the character is revealed in a short ceremony over the page: the screen goes dark, a sigil draws itself in the faction's colour, the class colour flashes, and the class, spec and a line from Joelinton appear. It stays up for about eight seconds; the X in the corner, a click anywhere or any key closes it sooner. The "Reveal Animation" checkbox turns it off (remembered in the browser), and it never plays for people who have "reduce motion" turned on.
 - **Remembered filters:** the filters, the "Exclude Skyborne" checkbox and the weighting are saved in the browser and come back after a refresh or a later visit. "Clear filters" saves the cleared state too. If the browser blocks storage, the page works as before and simply forgets.
 
 ## Running it
@@ -28,6 +29,7 @@ No build step. Open `index.html` in a browser, or serve the folder with any stat
 | `data.js` | Genders, factions, the race/class table, the class/spec table, backstory lines and Joelinton's dialogue |
 | `script.js` | Filtering, rolling and display logic |
 | `card.js` | Draws and saves the character card |
+| `summon.js` | The reveal ceremony after "Roll all" |
 
 ## Updating the race and class data
 
