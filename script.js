@@ -388,17 +388,25 @@ function renderOracle() {
 // Decide which { race, cls } pair gets rolled.
 //   Per combination: every pair is equally likely.
 //   Per race: every matching race is equally likely, then a class within it.
+// A race listed once per faction (Skyborne) is picked by its name, so it
+// counts as one race rather than two, and then its faction is picked at
+// random. Picking among the RACES entries instead gave it double odds.
 function chooseRaceAndClass(pairs) {
   if ($("fWeight").value === WEIGHT_COMBO) return pick(pairs);
-  const race = pick(unique(pairs.map(pair => pair.race)));
+  const name = pick(unique(pairs.map(pair => pair.race.name)));
+  const entries = unique(pairs.filter(pair => pair.race.name === name).map(pair => pair.race));
+  const race = pick(entries);
   return pick(pairs.filter(pair => pair.race === race));
 }
 
-// Show a new character: save it to history, display it, and let Joelinton comment.
+// Show a new character: save it to history, display it, and let Joelinton
+// comment. The comment is returned so the summoning can quote the same line.
 function commit(oracleLine, animateFields) {
   record(current);
   renderCharacter(current, animateFields);
-  announce(oracleLine, reaction(current));
+  const comment = reaction(current);
+  announce(oracleLine, comment);
+  return comment;
 }
 
 // "Roll all" button: a completely new character.
@@ -422,9 +430,9 @@ function rollAll() {
     race: choice.race,
   };
   setClass(current, choice.cls);     // adds id, class, spec and backstory
-  commit(oracleLine, ANIMATE_ALL);
+  const comment = commit(oracleLine, ANIMATE_ALL);
   countEvent("roll-all");
-  summon(current);                   // the reveal ceremony, in summon.js
+  summon(current, comment);          // the reveal ceremony, in summon.js
 }
 
 // "Reroll class" button: same gender and race, different class.

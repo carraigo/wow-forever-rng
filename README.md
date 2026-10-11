@@ -36,7 +36,7 @@ No build step. Open `index.html` in a browser, or serve the folder with any stat
 All game data is in `data.js`. Edit the `RACES` array; nothing else needs to change.
 
 - Each entry has a `faction`, a `name` and a list of allowed `classes`.
-- A race playable by both factions (currently Skyborne) is listed once per faction. When the Faction filter is "Any", that race rolls its faction at random.
+- A race playable by both factions (currently Skyborne) is listed once per faction. When the Faction filter is "Any", that race rolls its faction at random. It still counts as one race for "Per race" odds, so it is as likely as any other race.
 - Specs are in the `SPECS` object, keyed by class, as a list of spec names. Check this table against your ruleset.
 - Backstory lines are in `BACKSTORY`: general pasts and goals, plus extra pasts per class and extra goals per faction. Each past starts with "who" or "whose" and each goal reads after a comma. Add or edit lines freely.
 - Joelinton's lines are in `ORACLE`, including `reactClass` and `reactRace`, the comments on each new character, and `restore`, the comments when a character is brought back from history. Prices, odds and the starting purse are constants at the top of `script.js`.

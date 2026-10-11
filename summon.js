@@ -6,7 +6,7 @@
 // colour flashes, and the character appears with a word from Joelinton.
 //
 // index.html loads this file after script.js and card.js, so it can use what
-// they define (current, reaction, $ ...) as well as CARD_COLORS from card.js.
+// they define (current, $ ...) as well as CARD_COLORS from card.js.
 //
 // The ceremony only covers the page; the character is already on screen
 // underneath, so skipping it (the X, a click anywhere or any key) loses nothing. It is left
@@ -66,8 +66,9 @@ function loadSummoning() {
 
 // ---- The ceremony ----
 // Build the overlay for a character and play it. Called by rollAll() in
-// script.js after a successful roll.
-function summon(character) {
+// script.js after a successful roll, with Joelinton's comment on the
+// character, so the summoning quotes the same line as his panel.
+function summon(character, say) {
   if (!character || !summoningOn()) return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   endSummoning(true);                // a summoning already playing ends at once
@@ -97,7 +98,6 @@ function summon(character) {
     `${character.gender} ${character.race.name} · ${character.race.faction}`;
   overlay.querySelector(".summon-class").textContent = character.class;
   overlay.querySelector(".summon-spec").textContent = character.spec;
-  const say = reaction(character);
   overlay.querySelector(".summon-say").textContent = say ? `“${say}”` : "";
   document.body.appendChild(overlay);
 

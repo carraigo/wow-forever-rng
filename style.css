@@ -1,11 +1,12 @@
 /* Class and text colors are tuned to reach at least 4.5:1 contrast
-   against the background in both light and dark mode. */
+   against the background in both light and dark mode, including the
+   faint faction tint the background takes on after a roll. */
 :root {
-  --bg:#fafafa; --fg:#1a1a1a; --muted:#707070; --line:#ddd;
+  --bg:#fafafa; --fg:#1a1a1a; --muted:#6c6c6c; --line:#ddd;
   --accent:var(--fg); --accent-line:var(--line);
   --alliance:#1e5fbf; --horde:#b3261e;
-  --c-druid:#b84f00; --c-hunter:#4f7a1a; --c-mage:#0a769a;
-  --c-paladin:#b8426f; --c-priest:#6b6b6b; --c-rogue:#806e00;
+  --c-druid:#b44d00; --c-hunter:#4d7819; --c-mage:#0a769a;
+  --c-paladin:#b8426f; --c-priest:#6b6b6b; --c-rogue:#7d6c00;
   --c-shaman:#0058b0; --c-warlock:#5e5fd0; --c-warrior:#8a6334;
   --gold:#8a6100;
 }
@@ -170,7 +171,7 @@ button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
    own text colour. */
 .cost { text-transform: none; letter-spacing: 0; color: var(--gold); margin-left: 4px; }
 .cost:empty { display: none; }
-#roll .cost { color: inherit; opacity: .8; }
+#roll .cost { color: inherit; }
 
 /* Joelinton's panel under the roll buttons. */
 .oracle { width: 100%; max-width: 40ch; margin: -8px 0 40px; }
