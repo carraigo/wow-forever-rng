@@ -2,7 +2,7 @@
 // Forever Random Character: the summoning
 // =============================================================================
 // After each "Roll all" the new character is revealed in a short ceremony:
-// the screen goes dark, a sigil burns in the faction's colour, the class
+// the screen goes dark, the faction's crest draws itself in, the class
 // colour flashes, and the character appears with a word from Joelinton.
 //
 // index.html loads this file after script.js and card.js, so it can use what
@@ -18,17 +18,30 @@ const SUMMON_LENGTH = 8000;          // ms from the start until it fades out
 const SUMMON_FADE = 400;             // ms the fade out takes
 const SUMMON_KEY = "forever-rng-summoning";   // where the checkbox is remembered
 
-// The sigil: two rings, two triangles making a star and eight short marks
-// around the edge, in a 200 x 200 box. pathLength="1" lets the CSS draw every
-// line in over the same time, however long it really is.
-const SIGIL_SVG = `
-<svg class="sigil" viewBox="0 0 200 200" aria-hidden="true">
-  <circle cx="100" cy="100" r="92" pathLength="1"/>
-  <circle cx="100" cy="100" r="70" pathLength="1"/>
-  <path d="M100 30 L160.6 135 L39.4 135 Z" pathLength="1"/>
-  <path d="M100 170 L39.4 65 L160.6 65 Z" pathLength="1"/>
-  <path d="M100 2 V18 M100 182 V198 M2 100 H18 M182 100 H198 M30.7 30.7 L42 42 M158 158 L169.3 169.3 M30.7 169.3 L42 158 M158 42 L169.3 30.7" pathLength="1"/>
-</svg>`;
+// A crest for each faction, drawn in a 200 x 200 box with the class symbol
+// in the middle. They are our own drawings in the spirit of the two faction
+// banners, not Blizzard's artwork:
+//   Alliance  a knight's shield with a crown, flared top corners and a
+//             double band down the middle
+//   Horde     a round, notched war shield with three spikes and two axes
+// Each <path> is drawn in turn by the CSS, so the order is the drawing order.
+// pathLength="1" lets every line take the same time, however long it is.
+const CRESTS = {
+  Alliance: `
+    <path pathLength="1" d="M18 28 C34 40 52 40 66 32 L100 18 L134 32 C148 40 166 40 182 28 C186 96 160 154 100 190 C40 154 14 96 18 28 Z"/>
+    <path pathLength="1" d="M100 40 L132 52 C144 56 154 54 160 50 C160 100 140 138 100 164 C60 138 40 100 40 50 C46 54 56 56 68 52 Z"/>
+    <path pathLength="1" d="M80 18 L84 2 L92 10 L100 -2 L108 10 L116 2 L120 18"/>
+    <path pathLength="1" d="M18 28 L2 6 L34 22 M182 28 L198 6 L166 22"/>
+    <path pathLength="1" d="M88 52 V150 M112 52 V150"/>`,
+  Horde: `
+    <path pathLength="1" d="M100 36 L111 42 L123 40 L131 49 L143 50 L149 61 L160 67 L161 79 L170 87 L168 99 L174 110 L168 121 L170 133 L161 141 L160 153 L149 159 L143 170 L131 171 L123 180 L111 178 L100 184 L89 178 L77 180 L69 171 L57 170 L51 159 L40 153 L39 141 L30 133 L32 121 L26 110 L32 99 L30 87 L39 79 L40 67 L51 61 L57 50 L69 49 L77 40 L89 42 Z"/>
+    <path pathLength="1" d="M54 50 L34 6 L74 36 M86 36 L100 -8 L114 36 M126 36 L166 6 L146 50"/>
+    <path pathLength="1" d="M64 182 L146 100 M136 182 L54 100"/>
+    <path pathLength="1" d="M144 102 L171 109 Q167 133 143 137 L136 110 M56 102 L29 109 Q33 133 57 137 L64 110"/>`,
+};
+
+const crestSvg = faction =>
+  `<svg class="sigil" viewBox="0 0 200 200" aria-hidden="true">${CRESTS[faction]}</svg>`;
 
 let summonTimer = null;              // the pending fade out, if one is playing
 
@@ -71,7 +84,7 @@ function summon(character) {
       <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3 L13 13 M13 3 L3 13"/></svg>
     </button>
     <div class="summon-body" aria-hidden="true">
-    <div class="summon-circle">${SIGIL_SVG}<span class="summon-icon"></span></div>
+    <div class="summon-circle">${crestSvg(character.race.faction)}<span class="summon-icon"></span></div>
     <p class="summon-who"></p>
     <p class="summon-class"></p>
     <p class="summon-spec"></p>

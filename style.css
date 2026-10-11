@@ -195,7 +195,7 @@ button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
 /* The summoning (summon.js): a short reveal over the whole page after
    "Roll all". It is always dark, like the card, whatever the page theme.
    --sigil (faction colour) and --flash (class colour) are set by summon.js.
-   Timeline: dark at once, the sigil draws in over 1s, the class colour
+   Timeline: dark at once, the faction crest draws in over 1s and fills, the class colour
    flashes at 1.2s, the name follows, then Joelinton at 1.9s. It then stays
    up until SUMMON_LENGTH in summon.js, or until it is closed. */
 .summoning {
@@ -218,7 +218,7 @@ button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
 .summon-close svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .summon-close:hover, .summon-close:focus-visible { color: #eee; border-color: var(--flash); }
 .summoning.leaving { animation: summon-out .4s ease-in both; }
-/* The class colour bursts out from behind the sigil. */
+/* The class colour bursts out from behind the crest. */
 .summoning::before {
   content: ""; position: absolute; inset: 0; pointer-events: none;
   background: radial-gradient(circle at 50% 42%, var(--flash), transparent 55%);
@@ -227,23 +227,23 @@ button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
 .summon-circle { position: relative; width: min(220px, 55vw); aspect-ratio: 1; margin-bottom: 28px; }
 .sigil {
   width: 100%; height: 100%; overflow: visible;
-  fill: none; stroke: var(--sigil); stroke-width: 2; stroke-linecap: round;
+  fill: var(--sigil); fill-opacity: 0;
+  stroke: var(--sigil); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
   filter: drop-shadow(0 0 6px var(--sigil));
-  animation: summon-spin 12s linear infinite;
 }
 /* Each line is drawn from nothing to whole: with pathLength="1" a dash of
    length 1 offset by 1 is invisible, and moving the offset to 0 draws it. */
 .sigil > * {
   stroke-dasharray: 1; stroke-dashoffset: 1;
-  animation: summon-draw 1s ease-in-out .2s forwards;
+  animation: summon-draw 1s ease-in-out .2s forwards, summon-fill .6s ease-out 1.2s forwards;
 }
-.sigil > :nth-child(2) { animation-delay: .35s; }
-.sigil > :nth-child(3) { animation-delay: .5s; }
-.sigil > :nth-child(4) { animation-delay: .6s; }
-.sigil > :nth-child(5) { animation-delay: .7s; }
+.sigil > :nth-child(2) { animation-delay: .35s, 1.2s; }
+.sigil > :nth-child(3) { animation-delay: .5s, 1.2s; }
+.sigil > :nth-child(4) { animation-delay: .6s, 1.2s; }
+.sigil > :nth-child(5) { animation-delay: .7s, 1.2s; }
 .summon-icon {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-  font-size: min(64px, 16vw); animation: summon-rise .5s ease-out 1.2s both;
+  font-size: min(48px, 12vw); animation: summon-rise .5s ease-out 1.2s both;
 }
 .summoning p { position: relative; margin: 0; }
 .summon-who {
@@ -268,7 +268,7 @@ button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
 @keyframes summon-in    { from { opacity: 0; } }
 @keyframes summon-out   { to { opacity: 0; } }
 @keyframes summon-draw  { to { stroke-dashoffset: 0; } }
-@keyframes summon-spin  { to { transform: rotate(360deg); } }
+@keyframes summon-fill  { to { fill-opacity: .14; } }
 @keyframes summon-flash { 0% { opacity: 0; } 15% { opacity: .55; } 100% { opacity: .12; } }
 @keyframes summon-rise  { from { opacity: 0; transform: translateY(10px); } }
 @media (prefers-reduced-motion: reduce) {
