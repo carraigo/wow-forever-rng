@@ -1,7 +1,6 @@
 // Game data for the Forever Random Character generator.
-// A new race only needs an entry in RACES below. A new class needs a few more
-// things in this file, card.js and style.css: see "Updating the race and
-// class data" in README.md.
+// A new race only needs an entry in RACES below. A new class needs an entry
+// in CLASSES, and adding it to the races in RACES that can play it.
 //
 // Each race entry:
 //   faction: "Alliance" | "Horde"
@@ -13,34 +12,34 @@
 const GENDERS = ["Male", "Female"];
 const FACTIONS = ["Alliance", "Horde"];
 
-// Specs per class. One is picked at random when a class is rolled.
-// NOTE: this table uses the classic three-tree layout. Check it against
-// your ruleset and edit as needed.
-const SPECS = {
-  Druid:   ["Balance", "Feral", "Restoration"],
-  Hunter:  ["Beast Mastery", "Marksmanship", "Survival"],
-  Mage:    ["Arcane", "Fire", "Frost"],
-  Paladin: ["Holy", "Protection", "Retribution"],
-  Priest:  ["Discipline", "Holy", "Shadow"],
-  Rogue:   ["Assassination", "Combat", "Subtlety"],
-  Shaman:  ["Elemental", "Enhancement", "Restoration"],
-  Warlock: ["Affliction", "Demonology", "Destruction"],
-  Warrior: ["Arms", "Fury", "Protection"],
+// Each faction's colour: "light" on the light page, "dark" on the dark page
+// and always on the summoning and the character card, which are always dark.
+const FACTION_COLORS = {
+  Alliance: { light: "#1e5fbf", dark: "#5b9bf0" },
+  Horde:    { light: "#b3261e", dark: "#e5534b" },
 };
 
-// A simple symbol per class for the downloadable character card (card.js).
-// These are ordinary emoji rather than Blizzard's class icons. A new class
-// needs one here too.
-const CLASS_ICONS = {
-  Druid:   "🌿",
-  Hunter:  "🏹",
-  Mage:    "🔮",
-  Paladin: "🛡️",
-  Priest:  "🕯️",
-  Rogue:   "🗡️",
-  Shaman:  "⚡",
-  Warlock: "💀",
-  Warrior: "⚔️",
+// Everything about a class in one place:
+//   specs   one is picked at random when the class is rolled. NOTE: this
+//           uses the classic three-tree layout. Check it against your
+//           ruleset and edit as needed.
+//   icon    a simple symbol for the summoning and the character card.
+//           Ordinary emoji rather than Blizzard's class icons.
+//   light   its colour on the light page
+//   dark    its colour on the dark page, the summoning and the card
+// The colours are tuned to reach at least 4.5:1 contrast against the page
+// background, including the faint faction tint it takes on after a roll.
+// script.js turns them into CSS variables (--c-druid ...) for style.css.
+const CLASSES = {
+  Druid:   { specs: ["Balance", "Feral", "Restoration"],             icon: "🌿", light: "#b44d00", dark: "#ff7c0a" },
+  Hunter:  { specs: ["Beast Mastery", "Marksmanship", "Survival"],   icon: "🏹", light: "#4d7819", dark: "#aad372" },
+  Mage:    { specs: ["Arcane", "Fire", "Frost"],                     icon: "🔮", light: "#0a769a", dark: "#3fc7eb" },
+  Paladin: { specs: ["Holy", "Protection", "Retribution"],           icon: "🛡️", light: "#b8426f", dark: "#f48cba" },
+  Priest:  { specs: ["Discipline", "Holy", "Shadow"],                icon: "🕯️", light: "#6b6b6b", dark: "#ffffff" },
+  Rogue:   { specs: ["Assassination", "Combat", "Subtlety"],         icon: "🗡️", light: "#7d6c00", dark: "#fff468" },
+  Shaman:  { specs: ["Elemental", "Enhancement", "Restoration"],     icon: "⚡", light: "#0058b0", dark: "#3a93f2" },
+  Warlock: { specs: ["Affliction", "Demonology", "Destruction"],     icon: "💀", light: "#5e5fd0", dark: "#8788ee" },
+  Warrior: { specs: ["Arms", "Fury", "Protection"],                  icon: "⚔️", light: "#8a6334", dark: "#c69b6d" },
 };
 
 const RACES = [

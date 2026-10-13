@@ -1,7 +1,8 @@
 // =============================================================================
 // Forever Random Character: page logic
 // =============================================================================
-// The game data (GENDERS, FACTIONS, RACES, SPECS, BACKSTORY, ORACLE) lives in
+// The game data (GENDERS, FACTIONS, FACTION_COLORS, CLASSES, RACES, BACKSTORY,
+// ORACLE) lives in
 // data.js. index.html loads data.js first, so everything it defines is already
 // available by the time this file runs.
 //
@@ -90,6 +91,31 @@ const fill = (text, values) => text.replace(/\{(\w+)\}/g, (_, name) => values[na
 // "?." means "if this is missing, stop here and do nothing" instead of
 // causing an error, so rolling works either way.
 const countEvent = name => window.goatcounter?.count?.({ path: name, title: name, event: true });
+
+// Save something in the browser so it survives a refresh, and load it back.
+// localStorage is a small store the browser keeps for this page. It only
+// holds text, so values are turned into text (JSON) and back. It can be
+// blocked (private windows, strict privacy settings), and then using it
+// throws an error. These two catch that, so the page simply forgets instead,
+// and loadStored() gives null for anything it can't find or read. Text saved
+// before JSON was used (e.g. "off") comes back as that text.
+function saveStored(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {}
+}
+
+function loadStored(key) {
+  let text = null;
+  try {
+    text = localStorage.getItem(key);
+  } catch {}
+  try {
+    return JSON.parse(text);         // JSON.parse(null) is null
+  } catch {
+    return text;
+  }
+}
 
 // ---- 3. State ----
 // Everything the page remembers. It is all lost on refresh.
@@ -191,26 +217,19 @@ function validPairs(filters = readFilters()) {
   return pairs;
 }
 
-// Remember the filters between visits. localStorage is a small store the
-// browser keeps for this page. It can be blocked (private windows, strict
-// privacy settings) and then reading or writing throws an error, so both are
-// wrapped in try/catch: if it fails the page simply forgets, as it used to.
+// Remember the filters between visits (see saveStored above).
 const SAVED_IDS = [...FILTER_IDS, "fWeight"];
 
 function saveFilters() {
   const saved = { excludePaywalled: $("excludePaywalled").checked };
   for (const id of SAVED_IDS) saved[id] = $(id).value;
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
-  } catch {}
+  saveStored(STORAGE_KEY, saved);
 }
 
 function loadFilters() {
-  let saved = null;
-  try {
-    saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-  } catch {}
-  if (!saved) return;
+  const saved = loadStored(STORAGE_KEY);
+  // Nothing saved, or something that isn't a set of filters.
+  if (!saved || typeof saved !== "object") return;
 
   $("excludePaywalled").checked = saved.excludePaywalled === true;
   // The race and class choices depend on the dropdowns above them, so the
@@ -250,7 +269,7 @@ function makeBackstory(character) {
 function setClass(character, cls) {
   character.id = nextId++;   // use nextId, then add 1 to it for next time
   character.class = cls;
-  character.spec = pick(SPECS[cls]);
+  character.spec = pick(CLASSES[cls].specs);
   character.backstory = makeBackstory(character);
 }
 
@@ -487,6 +506,24 @@ function clearFilters() {
 }
 
 // ---- 8. Display ----
+// The faction and class colours live in data.js, with the rest of the game
+// data. This turns them into CSS variables for style.css (--alliance,
+// --c-mage ...): the light colours normally and the dark ones when the
+// computer is in dark mode. They go in a <style> element added to the page.
+function addColorVariables() {
+  // "shade" is "light" or "dark". Object.entries turns { Mage: {...} } into
+  // [["Mage", {...}]], so each name comes with its colours.
+  const variables = shade => [
+    ...Object.entries(FACTION_COLORS).map(([name, colors]) => `--${name.toLowerCase()}:${colors[shade]};`),
+    ...Object.entries(CLASSES).map(([name, colors]) => `--c-${name.toLowerCase()}:${colors[shade]};`),
+  ].join(" ");
+  const style = document.createElement("style");
+  style.textContent =
+    `:root { ${variables("light")} }\n` +
+    `@media (prefers-color-scheme: dark) { :root { ${variables("dark")} } }`;
+  document.head.appendChild(style);
+}
+
 // Play the roll animation on the given result fields (a list of element ids).
 //
 // The animation is CSS (see ".roll" in style.css) and plays when an element
@@ -630,6 +667,8 @@ function restoreFromHistory(event) {
 
 // ---- 10. Wiring ----
 // This part runs once, when the page loads.
+
+addColorVariables();
 
 // Fill the dropdowns.
 fillSelect($("fGender"), GENDERS);

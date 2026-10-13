@@ -5,8 +5,8 @@
 // the screen goes dark, the faction's crest draws itself in, the class
 // colour flashes, and the character appears with a word from Joelinton.
 //
-// index.html loads this file after script.js and card.js, so it can use what
-// they define (current, $ ...) as well as CARD_COLORS from card.js.
+// index.html loads this file after script.js, so it can use what script.js
+// defines ($, saveStored ...) as well as the data in data.js.
 //
 // The ceremony only covers the page; the character is already on screen
 // underneath, so skipping it (the X, a click anywhere or any key) loses nothing. It is left
@@ -53,15 +53,11 @@ function summoningOn() {
 }
 
 function saveSummoning() {
-  try {
-    localStorage.setItem(SUMMON_KEY, summoningOn() ? "on" : "off");
-  } catch {}
+  saveStored(SUMMON_KEY, summoningOn() ? "on" : "off");
 }
 
 function loadSummoning() {
-  try {
-    if (localStorage.getItem(SUMMON_KEY) === "off") $("summonMode").checked = false;
-  } catch {}
+  if (loadStored(SUMMON_KEY) === "off") $("summonMode").checked = false;
 }
 
 // ---- The ceremony ----
@@ -76,8 +72,8 @@ function summon(character, say) {
   const overlay = document.createElement("div");
   overlay.className = "summoning";
   // The colours go in as CSS variables; the animations in style.css use them.
-  overlay.style.setProperty("--sigil", CARD_COLORS[character.race.faction]);
-  overlay.style.setProperty("--flash", CARD_COLORS[character.class] || CARD_COLORS.fg);
+  overlay.style.setProperty("--sigil", FACTION_COLORS[character.race.faction].dark);
+  overlay.style.setProperty("--flash", CLASSES[character.class].dark);
   // Screen readers already hear the result through the aria-live list, so
   // everything but the close button is hidden from them; it is decoration.
   overlay.innerHTML = `
@@ -93,7 +89,7 @@ function summon(character, say) {
     <p class="summon-by">Joelinton</p>
     </div>`;
   // Text goes in with textContent so nothing in it is read as HTML.
-  overlay.querySelector(".summon-icon").textContent = CLASS_ICONS[character.class] || "";
+  overlay.querySelector(".summon-icon").textContent = CLASSES[character.class].icon;
   overlay.querySelector(".summon-who").textContent =
     `${character.gender} ${character.race.name} · ${character.race.faction}`;
   overlay.querySelector(".summon-class").textContent = character.class;

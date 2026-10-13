@@ -22,11 +22,9 @@ const SITE_URL = "https://carraigo.github.io/wow-forever-rng/";
 
 // The card is always dark, whatever the page theme, so these are the dark
 // colours from style.css written out. (A canvas can't read var(--...) itself.)
+// The faction and class colours are the "dark" ones in data.js.
 const CARD_COLORS = {
   bg: "#111", fg: "#eee", muted: "#8a8a8a", line: "#333", story: "#cfcfcf", gold: "#f0b93a",
-  Alliance: "#5b9bf0", Horde: "#e5534b",
-  Druid: "#ff7c0a", Hunter: "#aad372", Mage: "#3fc7eb", Paladin: "#f48cba",
-  Priest: "#ffffff", Rogue: "#fff468", Shaman: "#3a93f2", Warlock: "#8788ee", Warrior: "#c69b6d",
 };
 
 // ---- Helpers ----
@@ -82,8 +80,8 @@ function drawCard(character) {
   canvas.height = CARD_HEIGHT;
   const ctx = canvas.getContext("2d");    // "2d" is the drawing toolkit
   const faction = character.race.faction;
-  const classColor = CARD_COLORS[character.class] || CARD_COLORS.fg;
-  const factionColor = CARD_COLORS[faction];
+  const classColor = CLASSES[character.class].dark;
+  const factionColor = FACTION_COLORS[faction].dark;
 
   // Background: dark, with a soft glow of the class colour in the top right.
   ctx.fillStyle = CARD_COLORS.bg;
@@ -166,7 +164,7 @@ function drawCard(character) {
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.font = cardFont(100);
-  ctx.fillText(CLASS_ICONS[character.class] || "🎲", iconX, iconY + 6);
+  ctx.fillText(CLASSES[character.class].icon, iconX, iconY + 6);
 
   // Footer: the site's name on the left; its address and the date on the right.
   ctx.textBaseline = "alphabetic";

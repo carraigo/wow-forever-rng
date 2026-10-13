@@ -26,23 +26,24 @@ No build step. Open `index.html` in a browser, or serve the folder with any stat
 | --- | --- |
 | `index.html` | Page structure |
 | `style.css` | Layout, light/dark themes, faction and class colors |
-| `data.js` | Genders, factions, the race/class table, the class/spec table, backstory lines and Joelinton's dialogue |
+| `data.js` | Genders, factions and their colours, the class table (specs, symbols, colours), the race/class table, backstory lines and Joelinton's dialogue |
 | `script.js` | Filtering, rolling and display logic |
 | `card.js` | Draws and saves the character card |
 | `summon.js` | The reveal ceremony after "Roll all" |
 
 ## Updating the race and class data
 
-All game data is in `data.js`. A new race only needs an entry in the `RACES` array. A new class needs a few more things, listed at the end of this section.
+All game data is in `data.js`. A new race only needs an entry in the `RACES` array. A new class needs an entry in `CLASSES` too, and nothing outside `data.js` needs to change.
 
 - Each entry has a `faction`, a `name` and a list of allowed `classes`.
 - A race playable by both factions (currently Skyborne) is listed once per faction. When the Faction filter is "Any", that race rolls its faction at random. It still counts as one race for "Per race" odds, so it is as likely as any other race.
-- Specs are in the `SPECS` object, keyed by class, as a list of spec names. Check this table against your ruleset.
+- Everything about a class is in the `CLASSES` table, keyed by class name: its `specs`, the `icon` used on the summoning and the character card (ordinary emoji, not Blizzard artwork), and its colour on the `light` page and on the `dark` page, the summoning and the card. Check the specs against your ruleset. The page turns the colours into CSS variables (`--c-druid` and so on) when it loads.
+- Faction colours are in `FACTION_COLORS` in the same way.
 - Backstory lines are in `BACKSTORY`: general pasts and goals, plus extra pasts per class and extra goals per faction. Each past starts with "who" or "whose" and each goal reads after a comma. Add or edit lines freely. A class or faction with no lines of its own just uses the general ones.
 - Joelinton's lines are in `ORACLE`, including `reactClass` and `reactRace`, the comments on each new character, and `restore`, the comments when a character is brought back from history. Prices, odds and the starting purse are constants at the top of `script.js`.
 - The purse and price tags use `--gold` in `style.css`, set once for light mode and once for dark.
-- Class symbols for the character card are in `CLASS_ICONS` in `data.js`. They are ordinary emoji, not Blizzard artwork. The card's colours are written out in `CARD_COLORS` at the top of `card.js`, because a canvas cannot read CSS variables.
-- A new class needs its specs in `SPECS`, a color variable in `style.css`, named `--c-<classname>` in lowercase (for example `--c-monk`), in both the light and dark blocks, plus an entry in `CLASS_ICONS` and in `CARD_COLORS`. Its own backstory lines and Joelinton comments are optional.
+- The card's other colours (background, text, gold) are written out in `CARD_COLORS` at the top of `card.js`, because a canvas cannot read CSS variables.
+- A new class needs an entry in `CLASSES` with its specs, symbol and two colours. Pick colours that reach 4.5:1 contrast against the page in light and dark mode. Its own backstory lines and Joelinton comments are optional.
 
 ## Data source
 
