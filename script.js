@@ -1,8 +1,8 @@
 // =============================================================================
 // Forever Random Character: page logic
 // =============================================================================
-// The game data (GENDERS, FACTIONS, FACTION_COLORS, CLASSES, RACES, BACKSTORY,
-// ORACLE) lives in
+// The game data (GENDERS, FACTIONS, FACTION_COLORS, CLASSES, QUALITIES, RACES,
+// BACKSTORY, ORACLE) lives in
 // data.js. index.html loads data.js first, so everything it defines is already
 // available by the time this file runs.
 //
@@ -273,6 +273,19 @@ function setClass(character, cls) {
   character.backstory = makeBackstory(character);
 }
 
+// Roll a loot quality for the summoning, using the chances in QUALITIES.
+// One random number from 0 to 1 is walked along the list: each quality's
+// chance is taken off in turn, and the quality that takes it below 0 wins.
+// With 0.10 for Poor and 0.45 for Common, 0.07 gives Poor, 0.30 gives Common.
+function rollQuality() {
+  let luck = Math.random();
+  for (const quality of QUALITIES) {
+    luck -= quality.chance;
+    if (luck < 0) return quality;
+  }
+  return QUALITIES[0];               // only if the chances add up to less than 1
+}
+
 // ---- 6. Joelinton: optional mode where rerolls cost gold ----
 // "kind" below is always one of the keys of PRICE: "roll", "class" or "backstory".
 
@@ -331,6 +344,13 @@ function reaction(character) {
   const classLines = ORACLE.reactClass[character.class] ?? [];
   const raceLines = ORACLE.reactRace[character.race.name] ?? [];
   const lines = [...classLines, ...raceLines];
+  return lines.length ? pick(lines) : "";
+}
+
+// Joelinton's comment on a loot quality, or "" for a quality he has no
+// lines for (then he comments on the class or race instead).
+function qualityReaction(quality) {
+  const lines = ORACLE.reactQuality[quality.name] ?? [];
   return lines.length ? pick(lines) : "";
 }
 
@@ -421,11 +441,11 @@ function chooseRaceAndClass(pairs) {
 }
 
 // Show a new character: save it to history, display it, and let Joelinton
-// comment. The comment is returned so the summoning can quote the same line.
-function commit(oracleLine, animateFields) {
+// comment. Unless told what to say, he comments on the class or race. The
+// comment is returned so the summoning can quote the same line.
+function commit(oracleLine, animateFields, comment = reaction(current)) {
   record(current);
   renderCharacter(current, animateFields);
-  const comment = reaction(current);
   announce(oracleLine, comment);
   return comment;
 }
@@ -451,9 +471,14 @@ function rollAll() {
     race: choice.race,
   };
   setClass(current, choice.cls);     // adds id, class, spec and backstory
-  const comment = commit(oracleLine, ANIMATE_ALL);
+  // The loot quality only exists on the summoning, so it is only rolled
+  // when one will play. A Poor, Epic or Legendary one gets Joelinton's
+  // comment, in his panel and on the summoning alike.
+  const quality = willSummon() ? rollQuality() : null;
+  const qualityLine = quality ? qualityReaction(quality) : "";
+  const comment = commit(oracleLine, ANIMATE_ALL, qualityLine || reaction(current));
   countEvent("roll-all");
-  summon(current, comment);          // the reveal ceremony, in summon.js
+  summon(current, comment, quality); // the reveal ceremony, in summon.js
 }
 
 // "Reroll class" button: same gender and race, different class.

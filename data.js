@@ -42,6 +42,20 @@ const CLASSES = {
   Warrior: { specs: ["Arms", "Fury", "Protection"],                  icon: "⚔️", light: "#8a6334", dark: "#c69b6d" },
 };
 
+// Loot quality: each summoning also reveals one, like an item drop, in WoW's
+// item colours. It only appears on the summoning and never changes which
+// race or class is rolled. Listed from worst to best.
+//   chance  how often it comes up (0.45 = 45%). They should add up to 1.
+//   color   its colour on the (always dark) summoning
+const QUALITIES = [
+  { name: "Poor",      chance: 0.10, color: "#9d9d9d" },
+  { name: "Common",    chance: 0.45, color: "#ffffff" },
+  { name: "Uncommon",  chance: 0.25, color: "#1eff00" },
+  { name: "Rare",      chance: 0.13, color: "#3d8bff" },
+  { name: "Epic",      chance: 0.06, color: "#b960ff" },
+  { name: "Legendary", chance: 0.01, color: "#ff8000" },
+];
+
 const RACES = [
   // Alliance
   { faction: "Alliance", name: "Human",     classes: ["Hunter","Mage","Paladin","Priest","Rogue","Warlock","Warrior"] },
@@ -165,6 +179,14 @@ const ORACLE = {
     "Undead":    ["An Undead. You look better than most of my customers.", "An Undead. Terribly fashionable."],
     "Tauren":    ["A Tauren. Mind the doorframe.", "A Tauren. Gentle giant. Mostly."],
     "Troll":     ["A Troll. Regenerating already, I see.", "A Troll. Ya, mon. Do not repeat that."],
+  },
+  // Joelinton's comment on the loot quality shown on the summoning. He only
+  // bothers with the extremes; for any other quality he comments on the
+  // class or race as usual.
+  reactQuality: {
+    Poor:      ["Grey quality. I would vendor it, but the vendor would haggle.", "Poor. I have pulled better out of a murloc."],
+    Epic:      ["Purple. Even I am mildly impressed.", "Epic. Try not to let it go to your head."],
+    Legendary: ["Legendary. I will be telling the other oracles about this one.", "Orange! Somewhere, a guild is already arguing over who gets you."],
   },
   // Joelinton's comment when a character is brought back from the history
   // list. Going back is free, and Joelinton has noticed.

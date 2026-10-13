@@ -190,7 +190,8 @@ button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
 
 /* The summoning (summon.js): a short reveal over the whole page after
    "Roll all". It is always dark, like the card, whatever the page theme.
-   --sigil (faction colour) and --flash (class colour) are set by summon.js.
+   --sigil (faction colour), --flash (class colour) and --quality (loot
+   quality colour) are set by summon.js.
    Timeline: dark at once, the faction crest draws in over 1s and fills, the class colour
    flashes at 1.2s, the name follows, then Joelinton at 1.9s. It then stays
    up until SUMMON_LENGTH in summon.js, or until it is closed. */
@@ -261,6 +262,37 @@ button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
   color: #8a8a8a; animation: summon-rise .5s ease-out 2s both;
 }
 .summon-say:empty, .summon-say:empty + .summon-by { display: none; }
+/* Loot quality: its name in its colour above the character, and a soft
+   halo behind the crest from Uncommon up. Epic and Legendary also get
+   slowly turning rays of light, and Legendary floods the flash with its
+   orange instead of the class colour. */
+.summon-quality {
+  font-size: .85rem; font-weight: 700; letter-spacing: .35em; text-transform: uppercase;
+  color: var(--quality); margin-bottom: 10px !important;
+  text-shadow: 0 0 12px var(--quality);
+  animation: summon-rise .5s ease-out 1.3s both;
+}
+.summon-circle::before {
+  content: ""; position: absolute; inset: -30%; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, color-mix(in srgb, var(--quality) 35%, transparent), transparent 62%);
+  opacity: 0; animation: summon-halo 1s ease-out 1.2s forwards;
+}
+.summoning[data-quality="Poor"] .summon-circle::before,
+.summoning[data-quality="Common"] .summon-circle::before { display: none; }
+.summoning[data-quality="Epic"] .summon-circle::after,
+.summoning[data-quality="Legendary"] .summon-circle::after {
+  content: ""; position: absolute; inset: -55%; border-radius: 50%; pointer-events: none; z-index: -1;
+  background: repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--quality) 40%, transparent) 0deg 5deg, transparent 5deg 20deg);
+  -webkit-mask: radial-gradient(circle, #000 20%, transparent 68%); mask: radial-gradient(circle, #000 20%, transparent 68%);
+  opacity: 0; animation: summon-halo 1s ease-out 1.2s forwards, summon-turn 24s linear infinite;
+}
+.summoning[data-quality="Legendary"] .summon-circle::after { inset: -80%; }
+.summoning[data-quality="Legendary"] .summon-class { text-shadow: 0 0 24px var(--quality); }
+.summoning[data-quality="Legendary"]::before {
+  background: radial-gradient(circle at 50% 42%, var(--quality), transparent 60%);
+}
+@keyframes summon-halo { to { opacity: 1; } }
+@keyframes summon-turn { to { transform: rotate(360deg); } }
 @keyframes summon-in    { from { opacity: 0; } }
 @keyframes summon-out   { to { opacity: 0; } }
 @keyframes summon-draw  { to { stroke-dashoffset: 0; } }

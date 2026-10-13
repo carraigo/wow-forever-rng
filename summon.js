@@ -3,7 +3,8 @@
 // =============================================================================
 // After each "Roll all" the new character is revealed in a short ceremony:
 // the screen goes dark, the faction's crest draws itself in, the class
-// colour flashes, and the character appears with a word from Joelinton.
+// colour flashes, and the character appears with its loot quality and a
+// word from Joelinton. The better the quality, the bigger the glow.
 //
 // index.html loads this file after script.js, so it can use what script.js
 // defines ($, saveStored ...) as well as the data in data.js.
@@ -61,12 +62,18 @@ function loadSummoning() {
 }
 
 // ---- The ceremony ----
+// Will a summoning play after the next roll? Not if the checkbox is off,
+// and never for people who have "reduce motion" turned on.
+function willSummon() {
+  return summoningOn() && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 // Build the overlay for a character and play it. Called by rollAll() in
 // script.js after a successful roll, with Joelinton's comment on the
-// character, so the summoning quotes the same line as his panel.
-function summon(character, say) {
-  if (!character || !summoningOn()) return;
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+// character, so the summoning quotes the same line as his panel, and the
+// loot quality rolled for it (an entry from QUALITIES).
+function summon(character, say, quality) {
+  if (!character || !quality || !willSummon()) return;
   endSummoning(true);                // a summoning already playing ends at once
 
   const overlay = document.createElement("div");
@@ -74,6 +81,9 @@ function summon(character, say) {
   // The colours go in as CSS variables; the animations in style.css use them.
   overlay.style.setProperty("--sigil", FACTION_COLORS[character.race.faction].dark);
   overlay.style.setProperty("--flash", CLASSES[character.class].dark);
+  overlay.style.setProperty("--quality", quality.color);
+  // style.css gives the better qualities their extra effects from this.
+  overlay.dataset.quality = quality.name;
   // Screen readers already hear the result through the aria-live list, so
   // everything but the close button is hidden from them; it is decoration.
   overlay.innerHTML = `
@@ -82,6 +92,7 @@ function summon(character, say) {
     </button>
     <div class="summon-body" aria-hidden="true">
     <div class="summon-circle">${crestSvg(character.race.faction)}<span class="summon-icon"></span></div>
+    <p class="summon-quality"></p>
     <p class="summon-who"></p>
     <p class="summon-class"></p>
     <p class="summon-spec"></p>
@@ -90,6 +101,7 @@ function summon(character, say) {
     </div>`;
   // Text goes in with textContent so nothing in it is read as HTML.
   overlay.querySelector(".summon-icon").textContent = CLASSES[character.class].icon;
+  overlay.querySelector(".summon-quality").textContent = quality.name;
   overlay.querySelector(".summon-who").textContent =
     `${character.gender} ${character.race.name} · ${character.race.faction}`;
   overlay.querySelector(".summon-class").textContent = character.class;
