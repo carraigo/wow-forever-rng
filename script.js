@@ -233,9 +233,11 @@ function loadFilters() {
 // "A <race> <class> <past>, <goal>." from the lists in data.js.
 function makeBackstory(character) {
   // General lines and the class's (or faction's) own lines go into one list,
-  // then one is picked from the lot.
-  const past = pick([...BACKSTORY.pasts, ...BACKSTORY.classPasts[character.class]]);
-  const goal = pick([...BACKSTORY.goals, ...BACKSTORY.factionGoals[character.race.faction]]);
+  // then one is picked from the lot. "?? []" means a class or faction with no
+  // lines of its own just uses the general ones, instead of causing an error
+  // that would stop the roll.
+  const past = pick([...BACKSTORY.pasts, ...(BACKSTORY.classPasts[character.class] ?? [])]);
+  const goal = pick([...BACKSTORY.goals, ...(BACKSTORY.factionGoals[character.race.faction] ?? [])]);
   // "An Orc" but "A Troll": the pattern asks whether the name starts (^) with
   // a vowel; the trailing "i" makes it ignore upper/lower case.
   const article = /^[AEIOU]/i.test(character.race.name) ? "An" : "A";

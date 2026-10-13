@@ -112,10 +112,12 @@ function summon(character, say) {
   }, 0);
 }
 
-// A key pressed during the ceremony ends it. preventDefault stops that same
-// key from also pressing the button that has focus (a second "Roll all").
+// A key pressed during the ceremony ends it. Enter and Space would also
+// press the button that has focus (a second "Roll all"), so preventDefault
+// stops them doing that. Every other key still does its usual job as well,
+// so Tab, refresh (F5, Ctrl+R) and other shortcuts keep working.
 function skipSummoning(event) {
-  event.preventDefault();
+  if (event.key === "Enter" || event.key === " ") event.preventDefault();
   endSummoning();
 }
 

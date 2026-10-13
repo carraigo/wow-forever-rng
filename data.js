@@ -1,5 +1,7 @@
 // Game data for the Forever Random Character generator.
-// To update for a patch: edit RACES below. No other file needs to change.
+// A new race only needs an entry in RACES below. A new class needs a few more
+// things in this file, card.js and style.css: see "Updating the race and
+// class data" in README.md.
 //
 // Each race entry:
 //   faction: "Alliance" | "Horde"
