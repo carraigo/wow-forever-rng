@@ -194,6 +194,10 @@ button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
 .check input { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; }
 
 .filter-col .filters + .hint + .check { margin-top: 16px; }
+/* The Reveal Animation checkbox sits just under the roll buttons, pulled up
+   into their gap so the page stays short enough not to scroll. */
+.summon-toggle { margin: -24px 0 40px; font-size: .8rem; color: var(--muted); }
+.summon-toggle + .note { margin-top: -28px; }
 
 /* The summoning (summon.js): a short reveal over the whole page after
    "Roll all". It is always dark, like the card, whatever the page theme.
