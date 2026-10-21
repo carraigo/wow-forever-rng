@@ -11,6 +11,11 @@
 <body>
   <h1>Forever Random Character</h1>
 
+  <p class="countdown" id="countdown" hidden>
+    <span id="countdownText"></span>
+    <time class="when" id="countdownWhen" datetime="2026-11-04T23:00:00Z"></time>
+  </p>
+
   <main class="layout">
   <section class="roll-col" aria-label="Roll">
   <dl id="result" aria-live="polite" aria-atomic="true">
@@ -88,6 +93,7 @@
 <script src="script.js"></script>
 <script src="card.js"></script>
 <script src="summon.js"></script>
+<script src="countdown.js"></script>
 <script data-goatcounter="https://carraigo.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 </body>

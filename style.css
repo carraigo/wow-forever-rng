@@ -51,6 +51,13 @@ h1 {
   padding-bottom: 14px; border-bottom: 1px solid var(--accent-line);
   transition: border-color .3s;
 }
+/* The launch countdown under the title (countdown.js). The h1 keeps its
+   gap below, so the countdown pulls itself up into that space. */
+.countdown { margin: -24px 0 40px; font-size: .9rem; color: var(--muted); }
+.countdown .clock { color: var(--fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+.countdown .when { display: block; font-size: .75rem; margin-top: 4px; }
+.countdown.live { color: var(--gold); font-weight: 600; }
+
 dl {
   margin: 0 0 40px; display: grid; grid-template-columns: auto auto;
   gap: 12px 32px; text-align: left; font-size: 1.4rem;

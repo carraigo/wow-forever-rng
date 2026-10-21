@@ -15,6 +15,7 @@ A small static page that rolls a random World of Warcraft character: gender, fac
 - **Character card:** "Save card" under the backstory makes a 1200×630 PNG of the character on screen, in its class colour with a faction badge, a simple class symbol, the backstory and the site's address. With Joelinton mode on, the card also shows the gold left. On a computer it downloads; on a phone it opens the share menu. It also counts as a `save-card` event in GoatCounter.
 - **The summoning:** after each "Roll all" the character is revealed in a short ceremony over the page: the screen goes dark, the faction's crest draws itself in its colour (a crowned shield for the Alliance, a spiked war shield with crossed axes for the Horde; our own drawings, not Blizzard artwork), the class colour flashes, and the class, spec and a line from Joelinton appear. It stays up for about eight seconds; the X in the corner, a click anywhere or any key closes it sooner. The "Reveal Animation" checkbox turns it off (remembered in the browser), and it never plays for people who have "reduce motion" turned on.
 - **Loot quality:** each summoning also reveals a quality, like an item drop, in WoW's item colours: Poor 10%, Common 45%, Uncommon 25%, Rare 13%, Epic 6% and Legendary 1%. It appears only on the summoning, as its name above the character and a glow behind the crest from Uncommon up, with turning rays of light for Epic and Legendary. It is only for show and never changes the race or class odds. Joelinton comments on Poor, Epic and Legendary ones. With the summoning off, no quality is rolled.
+- **Launch countdown:** a line under the title counts down to WoW Forever's launch on 4 November 2026 at 3 PM Pacific (23:00 UTC) and shows that time in the visitor's own time zone. At launch it changes to "WoW Forever is live. Roll your character!" and a week later it hides itself. The launch time is `LAUNCH_AT` at the top of `countdown.js`, if it ever moves.
 - **Remembered filters:** the filters, the "Exclude Skyborne" checkbox and the weighting are saved in the browser and come back after a refresh or a later visit. "Clear filters" saves the cleared state too. If the browser blocks storage, the page works as before and simply forgets.
 
 ## Running it
@@ -31,6 +32,7 @@ No build step. Open `index.html` in a browser, or serve the folder with any stat
 | `script.js` | Filtering, rolling and display logic |
 | `card.js` | Draws and saves the character card |
 | `summon.js` | The reveal ceremony after "Roll all" |
+| `countdown.js` | The launch countdown under the title |
 
 ## Updating the race and class data
 
