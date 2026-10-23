@@ -63,3 +63,91 @@ if (updateCountdown()) {
     if (!updateCountdown()) clearInterval(timer);
   }, SECOND);
 }
+
+// =============================================================================
+// Dawn of the Final Day
+// =============================================================================
+// In the last 24 hours before launch, opening the page plays a short title
+// card in the style of Majora's Mask: the screen goes black and "Dawn of
+// The Final Day" fades in, with the hours left underneath. It only covers
+// the page, so skipping it (the X, a click anywhere or any key) loses
+// nothing. It plays once per browser tab, so reloading or coming back to
+// the tab does not replay it, and it is left out for people who have
+// "reduce motion" turned on.
+//
+// To see it before the final day, open the page with ?dawn on the end of
+// the address, e.g. index.html?dawn
+
+// ---- Settings ----
+const DAWN_LENGTH = 4200;            // ms from the start until it fades out
+const DAWN_FADE = 600;               // ms the fade out takes
+const DAWN_KEY = "forever-rng-dawn"; // remembers that this tab has seen it
+
+let dawnTimer = null;                // the pending fade out, if one is playing
+
+// Should the title card play on this page load? Only in the final 24 hours,
+// once per tab, and never with "reduce motion" on. ?dawn forces it.
+function dawnDue() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
+  if (new URLSearchParams(location.search).has("dawn")) return true;
+  const left = LAUNCH_AT - Date.now();
+  if (left <= 0 || left > DAY) return false;
+  // sessionStorage lasts as long as the tab. If it is blocked, the card
+  // simply plays on every load.
+  try {
+    if (sessionStorage.getItem(DAWN_KEY)) return false;
+    sessionStorage.setItem(DAWN_KEY, "seen");
+  } catch (e) { /* storage blocked */ }
+  return true;
+}
+
+// The line under the title: "-24 Hours Remain-", counted up so 23h 10m
+// left still reads 24, as the game does at dawn. The last hour reads
+// "-1 Hour Remains-".
+function hoursRemainText() {
+  const left = LAUNCH_AT - Date.now();
+  const hours = left > 0 && left <= DAY ? Math.ceil(left / HOUR) : 24;
+  return hours === 1 ? "-1 Hour Remains-" : `-${hours} Hours Remain-`;
+}
+
+function playDawn() {
+  const overlay = document.createElement("div");
+  overlay.className = "dawn";
+  // The countdown under the title already gives the time left in words, so
+  // the card itself is hidden from screen readers; only the X is offered.
+  overlay.innerHTML = `
+    <button class="summon-close dawn-close" type="button" aria-label="Skip the intro">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3 L13 13 M13 3 L3 13"/></svg>
+    </button>
+    <div class="dawn-body" aria-hidden="true">
+      <p class="dawn-of">Dawn of</p>
+      <p class="dawn-day">The Final Day</p>
+      <p class="dawn-left"></p>
+    </div>`;
+  overlay.querySelector(".dawn-left").textContent = hoursRemainText();
+  document.body.appendChild(overlay);
+
+  dawnTimer = setTimeout(endDawn, DAWN_LENGTH);
+  window.addEventListener("keydown", skipDawn, true);
+  // A click anywhere closes it, the X included.
+  overlay.addEventListener("click", () => endDawn());
+}
+
+// A key pressed during the card ends it. Enter and Space would also press
+// whatever button has focus, so preventDefault stops them doing that.
+function skipDawn(event) {
+  if (event.key === "Enter" || event.key === " ") event.preventDefault();
+  endDawn();
+}
+
+// Fade the card out and remove it.
+function endDawn() {
+  clearTimeout(dawnTimer);
+  window.removeEventListener("keydown", skipDawn, true);
+  for (const overlay of document.querySelectorAll(".dawn:not(.leaving)")) {
+    overlay.classList.add("leaving");
+    setTimeout(() => overlay.remove(), DAWN_FADE);
+  }
+}
+
+if (dawnDue()) playDawn();

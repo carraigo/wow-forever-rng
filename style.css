@@ -313,3 +313,39 @@ button.small { margin-top: 24px; padding: 8px 20px; font-size: .75rem; }
 @media (prefers-reduced-motion: reduce) {
   .summoning { display: none; }
 }
+
+/* Dawn of the Final Day (countdown.js): a short title card over the whole
+   page when it is opened in the last 24 hours before launch, after the
+   one in Majora's Mask. Black, with white serif lettering, whatever the
+   page theme.
+   Timeline: black at once, "Dawn of" fades in at .3s, "The Final Day" at
+   .7s, the hours left at 1.7s. It fades out at DAWN_LENGTH in countdown.js,
+   or as soon as it is skipped. */
+.dawn {
+  position: fixed; inset: 0; z-index: 20; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px; background: #000; color: #fff;
+  font-family: "Palatino Linotype", Palatino, "Book Antiqua", Georgia, "Times New Roman", serif;
+}
+.dawn.leaving { animation: summon-out .6s ease-in both; }
+.dawn-close { animation-delay: 1s; }
+.dawn-close:hover, .dawn-close:focus-visible { border-color: #8a8a8a; }
+.dawn p { margin: 0; text-shadow: 0 0 18px rgba(255, 255, 255, .25); }
+.dawn-of {
+  font-size: clamp(1.4rem, 5vw, 2.2rem); letter-spacing: .06em;
+  animation: dawn-in 1.2s ease-out .3s both;
+}
+.dawn-day {
+  font-size: clamp(2.6rem, 11vw, 5rem); letter-spacing: .04em; line-height: 1.1;
+  animation: dawn-in 1.4s ease-out .7s both;
+}
+.dawn-left {
+  margin-top: 28px !important; font-size: clamp(1rem, 3.5vw, 1.4rem); letter-spacing: .12em;
+  font-variant-numeric: lining-nums; color: #ddd;
+  animation: dawn-in 1.2s ease-out 1.7s both;
+}
+/* A slow fade with a slight blur, like the letters surfacing out of the dark. */
+@keyframes dawn-in { from { opacity: 0; filter: blur(4px); } }
+@media (prefers-reduced-motion: reduce) {
+  .dawn { display: none; }
+}
